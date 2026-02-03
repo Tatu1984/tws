@@ -1,0 +1,178 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String
+  role      String    @default("editor")
+  isActive  Boolean   @default(true)
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  createdPages   Page[]    @relation("CreatedPages")
+  updatedPages   Page[]    @relation("UpdatedPages")
+  createdSections Section[] @relation("CreatedSections")
+  updatedSections Section[] @relation("UpdatedSections")
+  createdHeaders Header[]  @relation("CreatedHeaders")
+  updatedHeaders Header[]  @relation("UpdatedHeaders")
+  createdFooters Footer[]  @relation("CreatedFooters")
+  updatedFooters Footer[]  @relation("UpdatedFooters")
+  updatedSettings SiteSettings[] @relation("UpdatedSettings")
+}
+
+model Page {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  description     String?
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+  status          String    @default("draft")
+  template        String    @default("default")
+  order           Int       @default(0)
+  showInNavigation Boolean  @default(true)
+  navigationLabel String?
+  isHomePage      Boolean   @default(false)
+  customCSS       String?
+  customJS        String?
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  createdById String
+  createdBy   User   @relation("CreatedPages", fields: [createdById], references: [id])
+  updatedById String
+  updatedBy   User   @relation("UpdatedPages", fields: [updatedById], references: [id])
+
+  headerId    String?
+  header      Header? @relation(fields: [headerId], references: [id])
+  footerId    String?
+  footer      Footer? @relation(fields: [footerId], references: [id])
+
+  sections    PageSection[]
+
+  @@index([slug])
+  @@index([status, order])
+  @@index([showInNavigation, order])
+}
+
+model Section {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   @default("section")
+  blocks    String   @default("[]")
+  style     String   @default("{}")
+  settings  String   @default("{}")
+  isGlobal  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String
+  createdBy   User   @relation("CreatedSections", fields: [createdById], references: [id])
+  updatedById String
+  updatedBy   User   @relation("UpdatedSections", fields: [updatedById], references: [id])
+
+  pages       PageSection[]
+
+  @@index([type])
+  @@index([isGlobal])
+}
+
+model PageSection {
+  id        String   @id @default(cuid())
+  pageId    String
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  sectionId String
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+
+  @@unique([pageId, sectionId])
+  @@index([pageId, order])
+}
+
+model Header {
+  id         String   @id @default(cuid())
+  name       String
+  isDefault  Boolean  @default(false)
+  logo       String   @default("{}")
+  navigation String   @default("[]")
+  ctaButton  String?
+  style      String   @default("{}")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  createdById String
+  createdBy   User   @relation("CreatedHeaders", fields: [createdById], references: [id])
+  updatedById String
+  updatedBy   User   @relation("UpdatedHeaders", fields: [updatedById], references: [id])
+
+  pages       Page[]
+}
+
+model Footer {
+  id          String   @id @default(cuid())
+  name        String
+  isDefault   Boolean  @default(false)
+  logo        String   @default("{}")
+  description String?
+  columns     String   @default("[]")
+  socialLinks String   @default("[]")
+  contactInfo String   @default("{}")
+  bottomBar   String   @default("{}")
+  style       String   @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdById String
+  createdBy   User   @relation("CreatedFooters", fields: [createdById], references: [id])
+  updatedById String
+  updatedBy   User   @relation("UpdatedFooters", fields: [updatedById], references: [id])
+
+  pages       Page[]
+}
+
+model SiteSettings {
+  id              String   @id @default(cuid())
+  siteName        String   @default("Ten Sparrows")
+  siteDescription String?
+  logo            String   @default("{}")
+  seo             String   @default("{}")
+  colors          String   @default("{}")
+  typography      String   @default("{}")
+  social          String   @default("{}")
+  contact         String   @default("{}")
+  analytics       String   @default("{}")
+  customCode      String   @default("{}")
+  maintenance     String   @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  updatedById String?
+  updatedBy   User?  @relation("UpdatedSettings", fields: [updatedById], references: [id])
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  mimeType    String
+  size        Int
+  url         String
+  alt         String?
+  caption     String?
+  folder      String   @default("uploads")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
