@@ -35,11 +35,19 @@ export const getPages = async (
         updatedAt: true,
         createdBy: { select: { name: true, email: true } },
         updatedBy: { select: { name: true, email: true } },
+        sections: true,
       },
       orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
     });
 
-    res.json({ pages });
+    // Transform to frontend expected format with _id
+    const transformedPages = pages.map((p) => ({
+      _id: p.id,
+      ...p,
+      sections: p.sections || [],
+    }));
+
+    res.json({ success: true, data: transformedPages });
   } catch (error) {
     console.error('Get pages error:', error);
     res.status(500).json({ message: 'Server error' });
@@ -100,11 +108,31 @@ export const getPage = async (
     }
 
     if (!page) {
-      res.status(404).json({ message: 'Page not found' });
+      res.status(404).json({ success: false, message: 'Page not found' });
       return;
     }
 
-    res.json({ page });
+    // Transform sections to frontend format
+    const transformedSections = page.sections?.map((ps) => ({
+      _id: ps.section.id,
+      name: ps.section.name,
+      type: ps.section.type,
+      blocks: JSON.parse(ps.section.blocks || '[]'),
+      style: JSON.parse(ps.section.style || '{}'),
+      settings: JSON.parse(ps.section.settings || '{}'),
+      isGlobal: ps.section.isGlobal,
+      createdAt: ps.section.createdAt,
+      updatedAt: ps.section.updatedAt,
+    })) || [];
+
+    res.json({
+      success: true,
+      data: {
+        _id: page.id,
+        ...page,
+        sections: transformedSections,
+      },
+    });
   } catch (error) {
     console.error('Get page error:', error);
     res.status(500).json({ message: 'Server error' });
@@ -161,8 +189,9 @@ export const createPage = async (
     });
 
     res.status(201).json({
+      success: true,
       message: 'Page created successfully',
-      page,
+      data: { _id: page.id, ...page },
     });
   } catch (error) {
     console.error('Create page error:', error);
@@ -207,9 +236,21 @@ export const updatePage = async (
       },
     });
 
+    // Transform sections
+    const transformedSections = page.sections?.map((ps) => ({
+      _id: ps.section.id,
+      name: ps.section.name,
+      type: ps.section.type,
+      blocks: JSON.parse(ps.section.blocks || '[]'),
+      style: JSON.parse(ps.section.style || '{}'),
+      settings: JSON.parse(ps.section.settings || '{}'),
+      isGlobal: ps.section.isGlobal,
+    })) || [];
+
     res.json({
+      success: true,
       message: 'Page updated successfully',
-      page,
+      data: { _id: page.id, ...page, sections: transformedSections },
     });
   } catch (error) {
     console.error('Update page error:', error);
@@ -237,7 +278,7 @@ export const deletePage = async (
     // Delete page (cascade will handle PageSection)
     await prisma.page.delete({ where: { id } });
 
-    res.json({ message: 'Page deleted successfully' });
+    res.json({ success: true, message: 'Page deleted successfully' });
   } catch (error) {
     console.error('Delete page error:', error);
     res.status(500).json({ message: 'Server error' });
