@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useInView } from "@/hooks/useInView";
 
 const services = [
   "Secure, local computing environments",
@@ -10,29 +11,40 @@ const services = [
 ];
 
 export function ServicesSection() {
+  const { ref: textRef, inView: textInView } = useInView<HTMLDivElement>();
+  const { ref: imgRef, inView: imgInView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+
   return (
     <section className="bg-[#001a2b] py-16 lg:py-24">
-      <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           {/* Text Content */}
-          <div>
-            <div className="mb-4">
+          <div ref={textRef}>
+            <div className={`mb-4 fade-up${textInView ? " in-view" : ""}`}>
               <div className="gradient-eyebrow">
                 <span className="text-style-tagline midnight-blue">What We Deliver</span>
               </div>
             </div>
-            <div className="mb-6">
-              <h2 className="text-white">
-                Practical systems, not abstract platforms.
-              </h2>
-            </div>
-            <div className="mb-6">
-              <p className="text-base text-white/80 leading-relaxed">
-                Everything we deploy is designed to operate reliably in real-world conditions, not idealized ones. Our systems are built to perform today within existing infrastructure, security requirements, and operational constraints, while remaining flexible enough to scale and evolve responsibly over time as needs change.
-              </p>
-            </div>
+            <h2
+              className={`text-white mb-6 fade-up${textInView ? " in-view" : ""}`}
+              style={{ transitionDelay: "100ms" }}
+            >
+              Practical systems, not abstract platforms.
+            </h2>
+            <p
+              className={`text-base text-white/80 leading-relaxed mb-6 fade-up${textInView ? " in-view" : ""}`}
+              style={{ transitionDelay: "180ms" }}
+            >
+              Everything we deploy is designed to operate reliably in real-world
+              conditions, not idealized ones. Our systems are built to perform
+              today within existing infrastructure, security requirements, and
+              operational constraints, while remaining flexible enough to scale
+              and evolve responsibly over time as needs change.
+            </p>
 
-            <div className="space-y-4 pt-2">
+            <div
+              className={`space-y-4 pt-2 stagger-children${textInView ? " in-view" : ""}`}
+            >
               {services.map((service, index) => (
                 <div key={index} className="flex items-start gap-4">
                   <div className="flex-shrink-0 self-start">
@@ -51,13 +63,14 @@ export function ServicesSection() {
           </div>
 
           {/* Image */}
-          <div className="relative">
+          <div ref={imgRef} className={`relative fade-in${imgInView ? " in-view" : ""}`}>
             <div className="rounded-[20px] overflow-hidden">
               <Image
                 src="/images/freepik__35mm-film-photography-a-logistics-or-warehouse-coo__15403.png"
                 alt="What we deliver"
                 width={1024}
                 height={1024}
+                loading="lazy"
                 className="w-full h-auto object-cover aspect-square rounded-none"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />

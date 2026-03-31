@@ -1,14 +1,21 @@
 "use client";
 
+import { useInView } from "@/hooks/useInView";
+
 export function AboutSection() {
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.15 });
+
   return (
     <section className="off-white-background py-20 lg:py-28">
-      <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="gradient-eyebrow text-style-tagline text-[#e57368] mb-6 inline-block">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref={ref} className="max-w-4xl mx-auto text-center">
+          <span className={`gradient-eyebrow text-style-tagline text-[#e57368] mb-6 inline-block fade-up${inView ? " in-view" : ""}`}>
             About
           </span>
-          <p className="text-2xl sm:text-3xl lg:text-4xl text-color-midnight leading-snug font-light">
+          <p
+            className={`text-2xl sm:text-3xl lg:text-4xl text-color-midnight leading-snug font-light fade-up${inView ? " in-view" : ""}`}
+            style={{ transitionDelay: "120ms" }}
+          >
             We started Ten Sparrows after seeing too many capable teams held
             back by systems that were powerful but hard to run. Technology was
             overcomplicated, fragile, and siloed. We created the company to

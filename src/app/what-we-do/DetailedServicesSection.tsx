@@ -1,6 +1,7 @@
 "use client";
 
 import { Server, Brain, Building2, Database, Code } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
 
 const services = [
   {
@@ -41,30 +42,39 @@ const services = [
 ];
 
 export function DetailedServicesSection() {
+  const { ref: headerRef, inView: headerInView } = useInView<HTMLDivElement>();
+  const { ref: listRef, inView: listInView } = useInView<HTMLDivElement>({ threshold: 0.05 });
+
   return (
     <section className="bg-white py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10 lg:mb-12">
-            <span className="text-sm font-semibold text-[#e57368] uppercase tracking-wider mb-3 block">
+          <div ref={headerRef} className="text-center mb-10 lg:mb-12">
+            <span className={`text-sm font-semibold text-[#e57368] uppercase tracking-wider mb-3 block fade-up${headerInView ? " in-view" : ""}`}>
               Core Capabilities
             </span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-[#001a2b] mb-4 leading-tight">
+            <h2
+              className={`text-3xl lg:text-4xl font-bold text-[#001a2b] mb-4 leading-tight fade-up${headerInView ? " in-view" : ""}`}
+              style={{ transitionDelay: "100ms" }}
+            >
               Our Service Areas
             </h2>
-            <p className="text-lg text-[#050707]/70 max-w-2xl mx-auto">
+            <p
+              className={`text-lg text-[#050707]/70 max-w-2xl mx-auto fade-up${headerInView ? " in-view" : ""}`}
+              style={{ transitionDelay: "180ms" }}
+            >
               Comprehensive capabilities designed for demanding environments.
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div
+            ref={listRef}
+            className={`space-y-6 stagger-children${listInView ? " in-view" : ""}`}
+          >
             {services.map((service, index) => (
-              <div
-                key={index}
-                className="bg-[#fcfbf9] rounded-2xl p-6 lg:p-8"
-              >
+              <div key={index} className="bg-[#fcfbf9] rounded-2xl p-6 lg:p-8">
                 <div className="flex flex-col md:flex-row md:items-start gap-4 lg:gap-6">
-                  <div className="w-12 h-12 rounded-full bg-[#e57368]/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-[#e57368]/10 flex items-center justify-center shrink-0">
                     <service.icon className="h-6 w-6 text-[#e57368]" />
                   </div>
                   <div className="flex-1">

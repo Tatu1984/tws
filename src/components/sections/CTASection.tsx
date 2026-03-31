@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useInView } from "@/hooks/useInView";
 
 interface CTASectionProps {
   title?: string;
@@ -15,6 +16,8 @@ export function CTASection({
   ctaText = "Start a Conversation",
   ctaLink = "/contact",
 }: CTASectionProps) {
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+
   return (
     <section
       className="relative py-16 lg:py-24 overflow-hidden bg-cover bg-center"
@@ -23,20 +26,25 @@ export function CTASection({
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-[#001a2b]/60 z-0" />
 
-      <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-[48rem] mx-auto text-center">
-          <div className="mb-2">
-            <h2 className="text-white">{title}</h2>
-          </div>
-          <p className="text-base text-white/80 mb-8 leading-relaxed">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div ref={ref} className="max-w-3xl mx-auto text-center">
+          <h2 className={`text-white mb-2 fade-up${inView ? " in-view" : ""}`}>
+            {title}
+          </h2>
+          <p
+            className={`text-base text-white/80 mb-8 leading-relaxed fade-up${inView ? " in-view" : ""}`}
+            style={{ transitionDelay: "120ms" }}
+          >
             {description}
           </p>
-          <Link
-            href={ctaLink}
-            className="button-gradient text-lg"
+          <div
+            className={`fade-up${inView ? " in-view" : ""}`}
+            style={{ transitionDelay: "240ms" }}
           >
-            {ctaText}
-          </Link>
+            <Link href={ctaLink} className="button-gradient text-lg">
+              {ctaText}
+            </Link>
+          </div>
         </div>
       </div>
     </section>
