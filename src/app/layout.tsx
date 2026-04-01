@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   title: "Ten Sparrows - Modern Computing for Real-World Operations",
   description: "We design local computing environments and intelligent systems for organizations where performance, reliability, and control matter.",
   keywords: ["edge computing", "micro data centers", "AI", "automation", "local computing"],
+  icons: {
+    icon: "/images/favicon.svg",
+  },
 };
 
 export default function RootLayout({
