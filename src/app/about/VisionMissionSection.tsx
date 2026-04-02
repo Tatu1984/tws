@@ -57,7 +57,7 @@ export function VisionMissionSection() {
                 </div>
               </div>
               <h2
-                className={`text-3xl sm:text-4xl lg:text-5xl font-bold text-color-midnight mb-6 leading-tight fade-up${visionTextInView ? " in-view" : ""}`}
+                className={`text-3xl sm:text-4xl lg:text-5xl font-normal text-color-midnight mb-6 leading-tight fade-up${visionTextInView ? " in-view" : ""}`}
                 style={{ transitionDelay: "100ms" }}
               >
                 Infrastructure that anyone can run
@@ -85,7 +85,7 @@ export function VisionMissionSection() {
             {/* Right - Image */}
             <div
               ref={visionImgRef}
-              className={`relative aspect-4/3 rounded-2xl overflow-hidden fade-in${visionImgInView ? " in-view" : ""}`}
+              className={`relative aspect-square rounded-2xl overflow-hidden fade-in${visionImgInView ? " in-view" : ""}`}
             >
               <Image
                 src="/images/two-business-people-standing-server-room-with-laptop-discussing.jpg"
@@ -107,7 +107,7 @@ export function VisionMissionSection() {
             {/* Left - Image */}
             <div
               ref={missionImgRef}
-              className={`relative aspect-4/3 rounded-2xl overflow-hidden order-2 lg:order-1 fade-in${missionImgInView ? " in-view" : ""}`}
+              className={`relative aspect-square rounded-2xl overflow-hidden order-2 lg:order-1 fade-in${missionImgInView ? " in-view" : ""}`}
             >
               <Image
                 src="/images/freepik__the-style-is-candid-image-photography-with-natural__57975.jpeg"
@@ -127,7 +127,7 @@ export function VisionMissionSection() {
                 </div>
               </div>
               <h2
-                className={`text-3xl sm:text-4xl lg:text-5xl font-bold text-color-midnight mb-6 leading-tight fade-up${missionTextInView ? " in-view" : ""}`}
+                className={`text-3xl sm:text-4xl lg:text-5xl font-normal text-color-midnight mb-6 leading-tight fade-up${missionTextInView ? " in-view" : ""}`}
                 style={{ transitionDelay: "100ms" }}
               >
                 Make micro data centers, clear, secure and scalable
