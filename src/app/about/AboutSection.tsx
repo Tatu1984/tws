@@ -54,7 +54,7 @@ export function AboutSection() {
   return (
     <section ref={sectionRef} className="off-white-background py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-7xl">
           <div ref={eyebrowRef} className={`mb-6 fade-up${eyebrowInView ? " in-view" : ""}`}>
             <div className="gradient-eyebrow inline-block">
               <span className="text-style-tagline">About</span>
@@ -62,8 +62,8 @@ export function AboutSection() {
           </div>
           <h2
             ref={textRef}
-            className="text-2xl sm:text-3xl lg:text-4xl text-justify text-color-midnight leading-snug font-light"
-            style={{ letterSpacing: "-0.1rem" }}
+            className="text-[2rem] sm:text-[2.75rem] lg:text-[3.25rem] font-normal text-color-midnight text-left"
+            style={{ letterSpacing: "-2px", lineHeight: "1.2" }}
           >
             We started Ten Sparrows after seeing too many capable teams held
             back by systems that were powerful but hard to run. Things were
