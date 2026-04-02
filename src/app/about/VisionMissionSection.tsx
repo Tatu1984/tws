@@ -28,7 +28,7 @@ function BulletList({ items }: { items: string[] }) {
             alt=""
             width={24}
             height={24}
-            className="rounded-none mt-0.5 flex-shrink-0"
+            className="rounded-none mt-0.5 shrink-0"
           />
           <span className="text-base text-[#050707]/80 leading-relaxed">{item}</span>
         </li>
@@ -51,9 +51,11 @@ export function VisionMissionSection() {
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             {/* Left - Text */}
             <div ref={visionTextRef}>
-              <span className={`gradient-eyebrow text-style-tagline text-[#e57368] mb-4 inline-block fade-up${visionTextInView ? " in-view" : ""}`}>
-                Vision
-              </span>
+              <div className={`mb-4 fade-up${visionTextInView ? " in-view" : ""}`}>
+                <div className="gradient-eyebrow inline-block">
+                  <span className="text-style-tagline">Vision</span>
+                </div>
+              </div>
               <h2
                 className={`text-3xl sm:text-4xl lg:text-5xl font-bold text-color-midnight mb-6 leading-tight fade-up${visionTextInView ? " in-view" : ""}`}
                 style={{ transitionDelay: "100ms" }}
@@ -119,9 +121,11 @@ export function VisionMissionSection() {
 
             {/* Right - Text */}
             <div ref={missionTextRef} className="order-1 lg:order-2">
-              <span className={`gradient-eyebrow text-style-tagline text-[#e57368] mb-4 inline-block fade-up${missionTextInView ? " in-view" : ""}`}>
-                Mission
-              </span>
+              <div className={`mb-4 fade-up${missionTextInView ? " in-view" : ""}`}>
+                <div className="gradient-eyebrow inline-block">
+                  <span className="text-style-tagline">Mission</span>
+                </div>
+              </div>
               <h2
                 className={`text-3xl sm:text-4xl lg:text-5xl font-bold text-color-midnight mb-6 leading-tight fade-up${missionTextInView ? " in-view" : ""}`}
                 style={{ transitionDelay: "100ms" }}

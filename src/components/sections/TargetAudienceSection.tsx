@@ -17,21 +17,24 @@ export function TargetAudienceSection() {
   return (
     <section className="off-white-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Image */}
-          <div ref={imgRef} className={`relative order-first fade-in${imgInView ? " in-view" : ""}`}>
-            <Image
-              src="/images/ChatGPT-Image-Dec-20-2025-08_06_42-AM.png"
-              alt="Who we work with"
-              width={1536}
-              height={1024}
-              loading="lazy"
-              className="w-full h-auto rounded-2xl"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center">
+
+          {/* Image — left column */}
+          <div ref={imgRef} className={`relative fade-in${imgInView ? " in-view" : ""}`}>
+            <div className="rounded-2xl overflow-hidden aspect-square">
+              <Image
+                src="/images/ChatGPT-Image-Dec-20-2025-08_06_42-AM.png"
+                alt="Who we work with"
+                width={1024}
+                height={1024}
+                loading="lazy"
+                className="w-full h-full object-cover rounded-none"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
           </div>
 
-          {/* Text Content */}
+          {/* Text Content — right column */}
           <div ref={textRef}>
             <div className={`mb-4 fade-up${textInView ? " in-view" : ""}`}>
               <div className="gradient-eyebrow">
@@ -64,7 +67,7 @@ export function TargetAudienceSection() {
             <div className={`space-y-3 stagger-children${textInView ? " in-view" : ""}`}>
               {audiences.map((audience, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">
+                  <div className="shrink-0 mt-0.5">
                     <Image
                       src="/images/coral-checkmark.svg"
                       alt=""
@@ -78,6 +81,7 @@ export function TargetAudienceSection() {
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </section>

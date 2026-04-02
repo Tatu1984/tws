@@ -31,10 +31,8 @@ export function WhoWeWorkWithTabs() {
       {/* Top Header Content */}
       <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         <div className="mb-4">
-          <div className="gradient-eyebrow">
-            <span className="text-style-tagline midnight-blue text-white">
-              Who We Work With
-            </span>
+          <div className="gradient-eyebrow midnight-blue inline-block">
+            <span className="text-style-tagline midnight-blue">Who We Work With</span>
           </div>
         </div>
         <h2 className="text-white mb-4">

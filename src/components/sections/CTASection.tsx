@@ -8,6 +8,7 @@ interface CTASectionProps {
   description?: string;
   ctaText?: string;
   ctaLink?: string;
+  backgroundImage?: string;
 }
 
 export function CTASection({
@@ -15,13 +16,14 @@ export function CTASection({
   description = "If you\u2019re exploring how to modernize systems without compromising control or reliability, we\u2019re happy to talk.",
   ctaText = "Start a Conversation",
   ctaLink = "/contact",
+  backgroundImage = "/images/373329-p-1600.jpg",
 }: CTASectionProps) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <section
       className="relative py-16 lg:py-24 overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/Hero.jpg')" }}
+      style={{ backgroundImage: `url('${backgroundImage}')` }}
     >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-[#001a2b]/60 z-0" />
@@ -41,7 +43,7 @@ export function CTASection({
             className={`fade-up${inView ? " in-view" : ""}`}
             style={{ transitionDelay: "240ms" }}
           >
-            <Link href={ctaLink} className="button-gradient text-lg">
+            <Link href={ctaLink} className="button-gradient-dark text-lg">
               {ctaText}
             </Link>
           </div>

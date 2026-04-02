@@ -9,9 +9,11 @@ export function AboutSection() {
     <section className="off-white-background py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={ref} className="max-w-4xl mx-auto text-center">
-          <span className={`gradient-eyebrow text-style-tagline text-[#e57368] mb-6 inline-block fade-up${inView ? " in-view" : ""}`}>
-            About
-          </span>
+          <div className={`mb-6 fade-up${inView ? " in-view" : ""}`}>
+            <div className="gradient-eyebrow inline-block">
+              <span className="text-style-tagline">About</span>
+            </div>
+          </div>
           <p
             className={`text-2xl sm:text-3xl lg:text-4xl text-color-midnight leading-snug font-light fade-up${inView ? " in-view" : ""}`}
             style={{ transitionDelay: "120ms" }}

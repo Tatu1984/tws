@@ -39,9 +39,11 @@ export function ValuesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Centered header */}
         <div ref={headerRef} className="text-center mb-12 lg:mb-16 max-w-3xl mx-auto">
-          <span className={`gradient-eyebrow text-style-tagline text-[#e57368] mb-4 inline-block fade-up${headerInView ? " in-view" : ""}`}>
-            What We Value
-          </span>
+          <div className={`mb-4 fade-up${headerInView ? " in-view" : ""}`}>
+            <div className="gradient-eyebrow inline-block">
+              <span className="text-style-tagline">What We Value</span>
+            </div>
+          </div>
           <h2
             className={`text-3xl sm:text-4xl lg:text-5xl font-bold text-color-midnight mb-4 leading-tight fade-up${headerInView ? " in-view" : ""}`}
             style={{ transitionDelay: "100ms" }}

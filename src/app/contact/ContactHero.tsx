@@ -13,7 +13,7 @@ export function ContactHero() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div ref={ref} className="max-w-3xl mx-auto text-center">
           <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
-            <div className="gradient-eyebrow inline-block">
+            <div className="gradient-eyebrow midnight-blue inline-block">
               <span className="text-style-tagline midnight-blue">Connect</span>
             </div>
           </div>

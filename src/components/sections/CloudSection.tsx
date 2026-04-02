@@ -9,7 +9,7 @@ export function CloudSection() {
   return (
     <section className="py-16 lg:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="max-w-240 mx-auto">
           <h2
             ref={headingRef}
             className={`big-text-scroll text-[#001a2b] fade-left${headingInView ? " in-view" : ""}`}

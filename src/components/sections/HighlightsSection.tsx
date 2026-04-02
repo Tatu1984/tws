@@ -29,7 +29,7 @@ export function HighlightsSection() {
       >
         {highlights.map((item, index) => (
           <div key={index} className="text-center flex flex-col items-center w-full">
-            <div className="mb-4">
+            <div className="mb-6">
               <div className="w-12 h-12 inline-block">
                 <Image
                   src={item.icon}
@@ -40,9 +40,9 @@ export function HighlightsSection() {
                 />
               </div>
             </div>
-            <h3 className="text-base font-medium text-[#001a2b] leading-snug">
+            <p className="text-[1.125rem] font-normal text-[#001a2b] leading-snug" style={{ fontFamily: '"Open Sans", sans-serif', letterSpacing: '0' }}>
               {item.text}
-            </h3>
+            </p>
           </div>
         ))}
       </div>

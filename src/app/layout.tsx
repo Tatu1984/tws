@@ -35,8 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script src="https://use.typekit.net/ivt8xmt.js" />
-        <script dangerouslySetInnerHTML={{ __html: 'try{Typekit.load();}catch(e){}' }} />
+        <link rel="stylesheet" href="https://use.typekit.net/ivt8xmt.css" />
       </head>
       <body
         className={`${openSans.variable} ${archivo.variable} font-sans antialiased`}

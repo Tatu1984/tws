@@ -31,7 +31,7 @@ export function Hero() {
             className={`flex justify-center fade-up${inView ? " in-view" : ""}`}
             style={{ transitionDelay: "240ms" }}
           >
-            <Link href="/contact" className="button-gradient text-lg">
+            <Link href="/contact" className="button-gradient-dark text-lg">
               Start the Conversation
             </Link>
           </div>

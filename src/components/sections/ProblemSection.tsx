@@ -10,7 +10,7 @@ export function ProblemSection() {
   return (
     <section className="off-white-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Text Content */}
           <div ref={textRef}>
             <div className={`mb-4 fade-up${textInView ? " in-view" : ""}`}>
@@ -45,15 +45,17 @@ export function ProblemSection() {
 
           {/* Image */}
           <div ref={imgRef} className={`relative fade-in${imgInView ? " in-view" : ""}`}>
-            <Image
-              src="/images/ChatGPT-Image-Dec-20-2025-07_52_48-AM.png"
-              alt="Distance creates delay"
-              width={1536}
-              height={1024}
-              loading="lazy"
-              className="w-full h-auto rounded-2xl"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+            <div className="rounded-2xl overflow-hidden aspect-square">
+              <Image
+                src="/images/ChatGPT-Image-Dec-20-2025-07_52_48-AM.png"
+                alt="Distance creates delay"
+                width={1024}
+                height={1024}
+                loading="lazy"
+                className="w-full h-full object-cover rounded-none"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
           </div>
         </div>
       </div>

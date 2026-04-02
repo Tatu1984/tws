@@ -65,7 +65,7 @@ export function ContactFormSection() {
               ref={leftRef}
               className={`bg-[#001a2b] p-8 lg:p-10 rounded-3xl fade-left${leftInView ? ' in-view' : ''}`}
             >
-              <div className="gradient-eyebrow mb-4 inline-block">
+              <div className="gradient-eyebrow midnight-blue mb-4 inline-block">
                 <span className="text-style-tagline midnight-blue">
                   Free &middot; No Commitment
                 </span>
@@ -96,7 +96,7 @@ export function ContactFormSection() {
                 href="https://outlook.office.com/book/TenSparrowsBooking@tensparrows.com/?ismsaljsauthenabled=true"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="button-gradient block text-center w-full"
+                className="button-gradient-dark block text-center w-full"
               >
                 Schedule Your Session
               </a>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useInView } from "@/hooks/useInView";
 
 /* ---------- data ---------- */
 
@@ -95,216 +96,240 @@ const capabilities = [
   },
 ];
 
-/* ---------- component ---------- */
+/* ---------- subcomponents ---------- */
 
-export function WhatWeDoContent() {
+function HeroSection() {
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
   return (
-    <>
-      {/* ===== 1. Hero Header ===== */}
-      <section className="bg-[#001a2b] bg-cover bg-center pt-32 lg:pt-40 pb-16 lg:pb-24" style={{ backgroundImage: "url('/images/Hero-insidepage.jpg')" }}>
-        <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-[48rem] mx-auto text-center">
-            <div className="mb-4">
-              <div className="gradient-eyebrow">
-                <span className="text-style-tagline midnight-blue">What We Do</span>
-              </div>
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Capabilities designed for real operations
-            </h1>
-            <p className="text-lg sm:text-xl text-white/70 leading-relaxed">
-              Ten Sparrows helps organizations modernize their technology
-              infrastructure without compromising on control, reliability, or
-              security. Every engagement starts with your environment and your
-              constraints.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== 2. 4-Column Highlights ===== */}
-      <section className="py-12 lg:py-16">
-        <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {highlights.map((item, index) => (
-              <div key={index} className="text-center p-6">
-                <div className="mb-6">
-                  <div className="w-12 h-12 mx-auto">
-                    <Image
-                      src={item.icon}
-                      alt=""
-                      width={47}
-                      height={47}
-                      className="w-full h-full rounded-none"
-                    />
-                  </div>
-                </div>
-                <h3 className="text-lg font-normal text-[#001a2b] leading-snug">
-                  {item.text}
-                </h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== 3. The Reality Section ===== */}
-      <section className="py-16 lg:py-24">
-        <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-            {/* Left */}
-            <div>
-              <div className="mb-4">
-                <div className="gradient-eyebrow">
-                  <span className="text-style-tagline">The Reality</span>
-                </div>
-              </div>
-              <h2 className="text-[#001a2b]">
-                Data is growing faster than centralized cloud systems can handle
-              </h2>
-            </div>
-            {/* Right */}
-            <div>
-              <p className="text-lg text-[#050707]/80 leading-relaxed">
-                Most organizations are generating more data than ever before&mdash;from
-                cameras, sensors, IoT devices, operational tools, and more. Sending
-                all of that data to a centralized cloud for processing creates
-                bottlenecks, increases costs, and introduces risk. The result is
-                delayed decisions, overloaded networks, and growing security
-                exposure. Real-world operations need systems that process data
-                closer to where it&rsquo;s created.
-              </p>
+    <section
+      className="relative bg-[#001a2b] bg-cover bg-center pt-32 lg:pt-40 pb-16 lg:pb-24"
+      style={{ backgroundImage: "url('/images/Hero-insidepage.jpg')" }}
+    >
+      <div className="absolute inset-0 bg-[#001a2b]/40 pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div ref={ref} className="max-w-3xl mx-auto text-center">
+          <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
+            <div className="gradient-eyebrow inline-block">
+              <span className="text-style-tagline midnight-blue">What We Do</span>
             </div>
           </div>
+          <h1
+            className={`text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight fade-up${inView ? " in-view" : ""}`}
+            style={{ transitionDelay: "100ms" }}
+          >
+            Capabilities designed for real operations
+          </h1>
+          <p
+            className={`text-lg sm:text-xl text-white/70 leading-relaxed fade-up${inView ? " in-view" : ""}`}
+            style={{ transitionDelay: "200ms" }}
+          >
+            Ten Sparrows helps organizations modernize their technology
+            infrastructure without compromising on control, reliability, or
+            security. Every engagement starts with your environment and your
+            constraints.
+          </p>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* ===== 4. Our Capabilities Header ===== */}
-      <section className="py-12 lg:py-16">
-        <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-[48rem] mx-auto text-center">
-            <div className="mb-4">
-              <div className="gradient-eyebrow">
-                <span className="text-style-tagline">Our Capabilities</span>
-              </div>
-            </div>
-            <h2 className="text-[#001a2b]">How we build systems</h2>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== 5. Capability Sections (sticky numbered) ===== */}
-      <section className="off-white-background py-8 lg:py-12">
-        <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
-          {capabilities.map((cap) => (
-            <div key={cap.number} className="mb-16 last:mb-0">
-              {/* Sticky header bar */}
-              <div
-                className="sticky top-0 z-10 bg-[#001a2b] text-white py-4 px-6 rounded-lg mb-8 flex items-center gap-4"
-              >
-                <span className="text-2xl font-bold gold-highlight-text">
-                  {cap.number}
-                </span>
-                <h3 className="text-xl lg:text-2xl font-semibold">
-                  {cap.title}
-                </h3>
-              </div>
-
-              {/* Two-column content */}
-              <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
-                {/* Left - text */}
-                <div className="space-y-8">
-                  {/* The Problem */}
-                  <div>
-                    <h4 className="text-lg font-bold text-[#001a2b] mb-3">
-                      The Problem:
-                    </h4>
-                    <p className="text-[#050707]/80 leading-relaxed">
-                      {cap.problem}
-                    </p>
-                  </div>
-
-                  {/* Our Solution */}
-                  <div>
-                    <h4 className="text-lg font-bold text-[#001a2b] mb-3">
-                      Our Solution:
-                    </h4>
-                    <p className="text-[#050707]/80 leading-relaxed">
-                      {cap.solution}
-                    </p>
-                  </div>
-
-                  {/* Where It's Used */}
-                  <div>
-                    <h4 className="text-lg font-bold text-[#001a2b] mb-3">
-                      Where It&apos;s Used:
-                    </h4>
-                    <ul className="space-y-3">
-                      {cap.usedIn.map((item, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <Image
-                            src="/images/coral-bullet.svg"
-                            alt=""
-                            width={20}
-                            height={20}
-                            className="flex-shrink-0 mt-0.5 rounded-none"
-                          />
-                          <span className="text-[#050707]/80">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Right - image */}
-                <div className="relative">
+function HighlightsGrid() {
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+  return (
+    <section className="py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          ref={ref}
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 stagger-children${inView ? " in-view" : ""}`}
+        >
+          {highlights.map((item, index) => (
+            <div key={index} className="text-center p-6">
+              <div className="mb-6">
+                <div className="w-12 h-12 mx-auto">
                   <Image
-                    src={cap.image}
-                    alt={cap.title}
-                    width={1200}
-                    height={800}
-                    className="w-full h-auto rounded-2xl"
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    src={item.icon}
+                    alt=""
+                    width={47}
+                    height={47}
+                    className="w-full h-full rounded-none"
                   />
                 </div>
               </div>
+              <h3 className="text-lg font-normal text-[#001a2b] leading-snug">
+                {item.text}
+              </h3>
             </div>
           ))}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* ===== 6. CTA Section ===== */}
-      <section className="relative py-16 lg:py-24 overflow-hidden">
-        {/* Background image overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/Hero.jpg"
-            alt=""
-            fill
-            className="object-cover rounded-none"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-[#001a2b]/80" />
+function RealitySection() {
+  const { ref: leftRef, inView: leftInView } = useInView<HTMLDivElement>();
+  const { ref: rightRef, inView: rightInView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+  return (
+    <section className="py-16 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          <div ref={leftRef}>
+            <div className={`mb-4 fade-up${leftInView ? " in-view" : ""}`}>
+              <div className="gradient-eyebrow">
+                <span className="text-style-tagline">The Reality</span>
+              </div>
+            </div>
+            <h2 className={`text-[#001a2b] fade-up${leftInView ? " in-view" : ""}`} style={{ transitionDelay: "100ms" }}>
+              Data is growing faster than centralized cloud systems can handle
+            </h2>
+          </div>
+          <div ref={rightRef}>
+            <p className={`text-lg text-[#050707]/80 leading-relaxed fade-up${rightInView ? " in-view" : ""}`}>
+              Most organizations are generating more data than ever before&mdash;from
+              cameras, sensors, IoT devices, operational tools, and more. Sending
+              all of that data to a centralized cloud for processing creates
+              bottlenecks, increases costs, and introduces risk. The result is
+              delayed decisions, overloaded networks, and growing security
+              exposure. Real-world operations need systems that process data
+              closer to where it&rsquo;s created.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CapabilitiesHeader() {
+  const { ref, inView } = useInView<HTMLDivElement>();
+  return (
+    <section className="py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref={ref} className="max-w-3xl mx-auto text-center">
+          <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
+            <div className="gradient-eyebrow inline-block">
+              <span className="text-style-tagline">Our Capabilities</span>
+            </div>
+          </div>
+          <h2 className={`text-[#001a2b] fade-up${inView ? " in-view" : ""}`} style={{ transitionDelay: "100ms" }}>
+            How we build systems
+          </h2>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CapabilityCard({ cap }: { cap: typeof capabilities[0] }) {
+  const { ref: textRef, inView: textInView } = useInView<HTMLDivElement>();
+  const { ref: imgRef, inView: imgInView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+  return (
+    <div className="mb-16 last:mb-0">
+      {/* Sticky header bar */}
+      <div className="sticky top-0 z-10 bg-[#001a2b] text-white py-4 px-6 rounded-lg mb-8 flex items-center gap-4">
+        <span className="text-2xl font-bold gold-highlight-text">{cap.number}</span>
+        <h3 className="text-xl lg:text-2xl font-semibold">{cap.title}</h3>
+      </div>
+
+      {/* Two-column content */}
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+        {/* Left - text */}
+        <div ref={textRef} className="space-y-8">
+          <div className={`fade-up${textInView ? " in-view" : ""}`}>
+            <h4 className="text-lg font-bold text-[#001a2b] mb-3">The Problem:</h4>
+            <p className="text-[#050707]/80 leading-relaxed">{cap.problem}</p>
+          </div>
+          <div className={`fade-up${textInView ? " in-view" : ""}`} style={{ transitionDelay: "120ms" }}>
+            <h4 className="text-lg font-bold text-[#001a2b] mb-3">Our Solution:</h4>
+            <p className="text-[#050707]/80 leading-relaxed">{cap.solution}</p>
+          </div>
+          <div className={`fade-up${textInView ? " in-view" : ""}`} style={{ transitionDelay: "240ms" }}>
+            <h4 className="text-lg font-bold text-[#001a2b] mb-3">Where It&apos;s Used:</h4>
+            <ul className="space-y-3">
+              {cap.usedIn.map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <Image
+                    src="/images/coral-bullet.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="shrink-0 mt-0.5 rounded-none"
+                  />
+                  <span className="text-[#050707]/80">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-[48rem] mx-auto text-center">
-            <div className="mb-4">
-              <h2 className="text-white">Start a conversation</h2>
-            </div>
-            <p className="text-lg text-white/80 mb-8 leading-relaxed">
-              If you&apos;re exploring how to modernize systems without
-              compromising control or reliability, we&apos;re happy to talk.
-            </p>
-            <Link
-              href="/contact"
-              className="button-gradient text-lg"
-            >
+        {/* Right - image */}
+        <div ref={imgRef} className={`relative fade-in${imgInView ? " in-view" : ""}`}>
+          <Image
+            src={cap.image}
+            alt={cap.title}
+            width={1200}
+            height={800}
+            loading="lazy"
+            className="w-full h-auto rounded-2xl"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CTASection() {
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+  return (
+    <section className="relative py-16 lg:py-24 overflow-hidden">
+      <div className="absolute inset-0">
+        <Image src="/images/Hero.jpg" alt="" fill className="object-cover rounded-none" sizes="100vw" />
+        <div className="absolute inset-0 bg-[#001a2b]/80" />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div ref={ref} className="max-w-3xl mx-auto text-center">
+          <h2 className={`text-white mb-4 fade-up${inView ? " in-view" : ""}`}>
+            Start a conversation
+          </h2>
+          <p
+            className={`text-lg text-white/80 mb-8 leading-relaxed fade-up${inView ? " in-view" : ""}`}
+            style={{ transitionDelay: "120ms" }}
+          >
+            If you&apos;re exploring how to modernize systems without
+            compromising control or reliability, we&apos;re happy to talk.
+          </p>
+          <div className={`fade-up${inView ? " in-view" : ""}`} style={{ transitionDelay: "240ms" }}>
+            <Link href="/contact" className="button-gradient text-lg">
               Start a Conversation
             </Link>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- main component ---------- */
+
+export function WhatWeDoContent() {
+  return (
+    <>
+      <HeroSection />
+      <HighlightsGrid />
+      <RealitySection />
+      <CapabilitiesHeader />
+
+      <section className="off-white-background py-8 lg:py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {capabilities.map((cap) => (
+            <CapabilityCard key={cap.number} cap={cap} />
+          ))}
+        </div>
       </section>
+
+      <CTASection />
     </>
   );
 }
