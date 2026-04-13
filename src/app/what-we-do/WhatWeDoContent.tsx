@@ -4,306 +4,469 @@ import Image from "next/image";
 import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 
-/* ---------- data ---------- */
+/* ─────────────────────────────────────────
+   DATA  (exact text from Webflow HTML)
+───────────────────────────────────────── */
 
 const highlights = [
-  { icon: "/images/Vector.svg", text: "Local, secure computing environments" },
-  { icon: "/images/monitoring.svg", text: "AI and automation deployed on-site" },
-  { icon: "/images/apis.svg", text: "Designed for reliability, control, and long-term trust" },
-  { icon: "/images/network.svg", text: "Zero trust access to data, devices and users" },
+  { icon: "/images/Vector.svg",    text: "Local, secure computing environments" },
+  { icon: "/images/monitoring.svg",text: "AI and automation deployed on-site" },
+  { icon: "/images/apis.svg",      text: "Designed for reliability, control, and long-term trust" },
+  { icon: "/images/network.svg",   text: "Zero trust access to data, devices and users" },
 ];
 
 const capabilities = [
   {
     number: "01",
-    title: "Local Computing & Micro Data Centers",
-    image: "/images/freepik__the-style-is-candid-image-photography-with-natural__61738.jpeg",
+    title:  "Local Computing & Micro Data Centers",
+    image:  "/images/freepik__the-style-is-candid-image-photography-with-natural__61738.jpeg",
     problem:
-      "Many organizations still rely on centralized data centers or cloud platforms that sit far from where their operations actually happen. As video, sensor, and operational data volumes grow, this distance creates delays, higher costs, and increased risk of disruption when connectivity is lost or bandwidth is constrained.",
+      "Many organizations still rely on centralized data centers or cloud platforms that are physically far from where data is generated. As video, sensor, and operational data volumes grow, this distance creates delays, higher costs, and increased risk. In critical environments, waiting seconds or minutes for data to travel back and forth is not acceptable.",
     solution:
-      "Ten Sparrows designs and deploys micro data centers\u2014compact, secure computing environments placed on-site or near operations. These systems process data locally, reduce dependency on cloud connectivity, and give organizations direct control over their infrastructure. Each deployment is tailored to the environment, from power and cooling to physical security and network architecture.",
+      "Ten Sparrows designs and deploys micro data centers—compact, secure computing environments placed on-site or near operations. These systems process data locally, reduce reliance on constant connectivity, and provide a stable foundation for AI and analytics. This approach is often called edge computing. In practical terms, it means keeping critical intelligence closer to the people and systems that need it.",
     usedIn: [
-      "Municipal facilities",
-      "Utility substations",
-      "Transportation hubs",
-      "Healthcare facilities",
-      "Industrial environments",
+      "Municipal facilities and city operations",
+      "Utility substations and field sites",
+      "Transportation hubs and roadways",
+      "Healthcare facilities and campuses",
+      "Industrial and infrastructure environments",
     ],
+    itemClass: "content-item-1",
   },
   {
     number: "02",
-    title: "AI for Monitoring & Decision Support",
-    image: "/images/freepik__the-style-is-candid-image-photography-with-natural__61739.jpeg",
+    title:  "AI for Monitoring & Decision Support",
+    image:  "/images/freepik__the-style-is-candid-image-photography-with-natural__61739.jpeg",
     problem:
-      "Organizations are under pressure to \u201cuse AI,\u201d but many solutions are designed for centralized cloud environments and require constant connectivity, significant bandwidth, and ongoing data uploads. For environments generating real-time video, sensor, and telemetry data, these models introduce latency, cost, and privacy concerns.",
+      "Organizations are under pressure to \u201cuse AI,\u201d but many solutions are designed for centralized cloud environments and office use\u2014not field-deployed, bandwidth-constrained, or privacy-sensitive environments. Sending data off-site for analysis introduces latency, cost, and risk.",
     solution:
       "Ten Sparrows deploys AI models inside local computing environments so data can be analyzed where it is created. These models support monitoring, anomaly detection, predictive maintenance, and situational awareness\u2014without sending sensitive data off-site. Every deployment is configured for the specific environment, data types, and operational goals of the organization.",
     usedIn: [
-      "Public safety",
-      "Infrastructure monitoring",
-      "Utilities and energy",
-      "Healthcare operations",
-      "Transportation",
+      "Public safety and surveillance",
+      "Utility and infrastructure monitoring",
+      "Healthcare operational support",
+      "Transportation and logistics",
+      "Industrial automation",
     ],
+    itemClass: "content-item-2",
   },
   {
     number: "03",
-    title: "Smart City & Public Safety Systems",
-    image: "/images/freepik__the-style-is-candid-image-photography-with-natural__61740.jpeg",
+    title:  "Smart City & Public Safety Systems",
+    image:  "/images/freepik__the-style-is-candid-image-photography-with-natural__61740.jpeg",
     problem:
-      "Cities and public agencies face growing demands to improve safety, efficiency, and transparency\u2014but they often rely on fragmented, legacy systems that can\u2019t communicate with one another. Building a connected, responsive city infrastructure from scratch is expensive, risky, and often politically complex.",
+      "Cities and public agencies face growing demands to improve safety, efficiency, and transparency\u2014often with aging infrastructure and limited resources. Many smart city solutions are fragmented, cloud-dependent, or difficult to govern responsibly.",
     solution:
-      "Ten Sparrows builds integrated, locally deployed systems that support real-time awareness, cross-agency coordination, and data-driven decision-making. We work within existing infrastructure to connect video, sensor, communications, and operational data into unified platforms\u2014without requiring full system replacement.",
+      "Ten Sparrows builds integrated, locally deployed systems that support real-time awareness and coordinated response. By combining micro data centers with AI-enabled software, agencies can process data locally, apply clear rules, and maintain control over how technology is used.",
     usedIn: [
       "City operations centers",
-      "Traffic management",
-      "Public safety",
-      "Municipal infrastructure",
-      "Smart campus",
+      "Traffic and transportation management",
+      "Public safety and emergency response",
+      "Municipal infrastructure monitoring",
+      "Smart campus environments",
     ],
+    itemClass: "content-item-3",
   },
   {
     number: "04",
-    title: "Secure Data & Systems Integration",
-    image: "/images/freepik__the-style-is-candid-image-photography-with-natural__61741.jpeg",
+    title:  "Secure Data & Systems Integration",
+    image:  "/images/freepik__the-style-is-candid-image-photography-with-natural__61741.jpeg",
     problem:
-      "Most organizations already have many systems in place\u2014often from different vendors, installed at different times, and built on different standards. Getting these systems to share data securely and reliably is one of the biggest challenges in modern operations, especially when compliance, access control, and auditability are required.",
+      "Most organizations already have many systems in place\u2014often from different vendors, built over many years. Poor integration can introduce security gaps, data inconsistencies, and operational friction\u2014especially as data volumes and compliance requirements grow.",
     solution:
-      "Ten Sparrows designs integrations that respect system boundaries, security requirements, and data governance policies. We connect existing tools and platforms using open standards and secure protocols, enabling data to flow where it\u2019s needed without creating unnecessary risk or vendor dependencies.",
+      "Ten Sparrows designs integrations that respect system boundaries, security requirements, and operational workflows. By processing and routing data locally where appropriate, we reduce exposure while improving reliability and performance.",
     usedIn: [
-      "Government and agency",
-      "Utility and energy",
-      "Healthcare IT",
-      "Transportation and logistics",
-      "Multi-vendor",
+      "Government and agency systems",
+      "Utility and energy platforms",
+      "Healthcare IT and operational systems",
+      "Transportation and logistics systems",
+      "Multi-vendor operational environments",
     ],
+    itemClass: "content-item-4",
   },
   {
     number: "05",
-    title: "Custom Applications Built for the Field",
-    image: "/images/freepik__the-style-is-candid-image-photography-with-natural__61742.jpeg",
+    title:  "Custom Applications Built for the Field",
+    image:  "/images/freepik__the-style-is-candid-image-photography-with-natural__61742.jpeg",
     problem:
-      "Off-the-shelf software assumes ideal conditions\u2014constant connectivity, standardized workflows, and predictable user behavior. But organizations operating in the field, in facilities, or across distributed environments face conditions that generic software simply wasn\u2019t built for.",
+      "Off-the-shelf software assumes ideal conditions\u2014constant connectivity, standardized workflows, and office-based users. Real operations involve field teams, inspectors, and operators who need tools that work in their actual environment, not a generic one.",
     solution:
-      "When existing tools fall short, Ten Sparrows designs and builds custom applications tailored to specific workflows, environments, and user needs. These applications are built for reliability in low-connectivity, high-stakes, or non-standard conditions\u2014and they\u2019re designed to integrate cleanly with existing systems.",
+      "Ten Sparrows designs and builds custom applications that integrate with local computing environments and offline use\u2014when existing tools fall short. Ten Sparrows designs and builds custom applications tailored to specific workflows, constraints, and users. These applications are shaped around real workflows, constraints, and users\u2014not generic templates.",
     usedIn: [
-      "Field operations",
-      "Dispatch centers",
-      "Healthcare/clinical support",
-      "Infrastructure/maintenance",
-      "Multi-vendor",
+      "Field operations and inspections",
+      "Dispatch and operations centers",
+      "Infrastructure and maintenance crews",
+      "Multi-vendor operational environments",
     ],
+    itemClass: "content-item-5",
   },
 ];
 
-/* ---------- subcomponents ---------- */
+/* ─────────────────────────────────────────
+   HERO SECTION
+───────────────────────────────────────── */
 
 function HeroSection() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
   return (
-    <section
-      className="relative bg-[#001a2b] bg-cover bg-center pt-32 lg:pt-40 pb-16 lg:pb-24"
-      style={{ backgroundImage: "url('/images/Hero-insidepage.jpg')" }}
+    <header
+      className="section-header23 relative"
+      style={{
+        backgroundImage: "url('/images/Hero-insidepage.jpg')",
+        backgroundPosition: "50%",
+        backgroundSize: "cover",
+        backgroundColor: "#001a2b",
+        paddingBottom: "100px",
+      }}
     >
-      <div className="absolute inset-0 bg-[#001a2b]/40 pointer-events-none" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div ref={ref} className="max-w-3xl mx-auto text-center">
-          <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
-            <div className="gradient-eyebrow inline-block">
-              <span className="text-style-tagline midnight-blue">What We Do</span>
+      <div className="absolute inset-0 bg-[#001a2b]/60 pointer-events-none" />
+      <div className="max-w-[80rem] mx-auto px-[5%] relative z-10">
+        <div className="py-28 lg:py-36">
+          <div ref={ref} className="text-center">
+            {/* Eyebrow */}
+            <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
+              <div className="gradient-eyebrow midnight-blue inline-block">
+                <span className="text-style-tagline midnight-blue">What We Do</span>
+              </div>
+            </div>
+            {/* H1 */}
+            <div className="max-w-[60rem] mx-auto">
+              <h1
+                className={`text-white text-center fade-up${inView ? " in-view" : ""}`}
+                style={{ transitionDelay: "100ms" }}
+              >
+                Capabilities designed for real operations
+              </h1>
+              {/* Description */}
+              <p
+                className={`mt-6 text-white/80 leading-relaxed fade-up${inView ? " in-view" : ""}`}
+                style={{ fontSize: "1.125rem", transitionDelay: "200ms" }}
+              >
+                Ten Sparrows designs and deploys local computing environments and
+                intelligent systems for organizations where performance,
+                reliability, and control matter. We help teams process and act on
+                data in real time, close to where decisions are made, without
+                depending entirely on distant cloud infrastructure.
+              </p>
             </div>
           </div>
-          <h1
-            className={`text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight fade-up${inView ? " in-view" : ""}`}
-            style={{ transitionDelay: "100ms" }}
-          >
-            Capabilities designed for real operations
-          </h1>
-          <p
-            className={`text-lg sm:text-xl text-white/70 leading-relaxed fade-up${inView ? " in-view" : ""}`}
-            style={{ transitionDelay: "200ms" }}
-          >
-            Ten Sparrows helps organizations modernize their technology
-            infrastructure without compromising on control, reliability, or
-            security. Every engagement starts with your environment and your
-            constraints.
-          </p>
         </div>
       </div>
-    </section>
+    </header>
   );
 }
+
+/* ─────────────────────────────────────────
+   4-COLUMN HIGHLIGHTS
+───────────────────────────────────────── */
 
 function HighlightsGrid() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
   return (
-    <section className="py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          ref={ref}
-          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 stagger-children${inView ? " in-view" : ""}`}
-        >
-          {highlights.map((item, index) => (
-            <div key={index} className="text-center p-6">
-              <div className="mb-6">
-                <div className="w-12 h-12 mx-auto">
+    <section className="bg-white">
+      <div className="max-w-[80rem] mx-auto px-[5%]">
+        <div className="py-12">
+          <div
+            ref={ref}
+            className={`grid grid-cols-2 lg:grid-cols-4 gap-8 stagger-children${inView ? " in-view" : ""}`}
+          >
+            {highlights.map((item, i) => (
+              <div key={i} className="flex flex-col items-center text-center">
+                <div className="mb-6">
                   <Image
                     src={item.icon}
                     alt=""
                     width={47}
                     height={47}
-                    className="w-full h-full rounded-none"
+                    className="rounded-none"
                   />
                 </div>
+                <p
+                  className="text-[#001a2b]"
+                  style={{ fontFamily: '"Open Sans", sans-serif', fontSize: "1.125rem", fontWeight: 400 }}
+                >
+                  {item.text}
+                </p>
               </div>
-              <h3 className="text-lg font-normal text-[#001a2b] leading-snug">
-                {item.text}
-              </h3>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
+/* ─────────────────────────────────────────
+   REALITY SECTION
+───────────────────────────────────────── */
+
 function RealitySection() {
-  const { ref: leftRef, inView: leftInView } = useInView<HTMLDivElement>();
+  const { ref: leftRef, inView: leftInView }   = useInView<HTMLDivElement>();
   const { ref: rightRef, inView: rightInView } = useInView<HTMLDivElement>({ threshold: 0.1 });
   return (
-    <section className="py-16 lg:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          <div ref={leftRef}>
-            <div className={`mb-4 fade-up${leftInView ? " in-view" : ""}`}>
-              <div className="gradient-eyebrow">
-                <span className="text-style-tagline">The Reality</span>
+    <section className="bg-white">
+      <div className="max-w-[80rem] mx-auto px-[5%]">
+        <div className="py-12">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            {/* Left */}
+            <div ref={leftRef}>
+              <div className={`mb-4 fade-up${leftInView ? " in-view" : ""}`}>
+                <div className="gradient-eyebrow inline-block">
+                  <span className="text-style-tagline">The Reality</span>
+                </div>
               </div>
+              <h2
+                className={`text-[#001a2b] fade-up${leftInView ? " in-view" : ""}`}
+                style={{ transitionDelay: "100ms" }}
+              >
+                Data is growing faster than centralized cloud systems can handle
+              </h2>
             </div>
-            <h2 className={`text-[#001a2b] fade-up${leftInView ? " in-view" : ""}`} style={{ transitionDelay: "100ms" }}>
-              Data is growing faster than centralized cloud systems can handle
-            </h2>
-          </div>
-          <div ref={rightRef}>
-            <p className={`text-lg text-[#050707]/80 leading-relaxed fade-up${rightInView ? " in-view" : ""}`}>
-              Most organizations are generating more data than ever before&mdash;from
-              cameras, sensors, IoT devices, operational tools, and more. Sending
-              all of that data to a centralized cloud for processing creates
-              bottlenecks, increases costs, and introduces risk. The result is
-              delayed decisions, overloaded networks, and growing security
-              exposure. Real-world operations need systems that process data
-              closer to where it&rsquo;s created.
-            </p>
+            {/* Right */}
+            <div ref={rightRef}>
+              <p
+                className={`text-[#001a2b]/80 leading-relaxed fade-up${rightInView ? " in-view" : ""}`}
+                style={{ fontSize: "1.125rem", marginTop: "40px" }}
+              >
+                Organizations across government, infrastructure, utilities, and
+                healthcare generate massive volumes of data from cameras, sensors,
+                equipment, and operational systems. The challenge is no longer
+                collection&mdash;it&rsquo;s processing data fast enough, safely
+                enough, and close enough to where decisions are made.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+/* ─────────────────────────────────────────
+   CAPABILITIES HEADER
+───────────────────────────────────────── */
 
 function CapabilitiesHeader() {
   const { ref, inView } = useInView<HTMLDivElement>();
   return (
-    <section className="py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={ref} className="max-w-3xl mx-auto text-center">
-          <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
-            <div className="gradient-eyebrow inline-block">
-              <span className="text-style-tagline">Our Capabilities</span>
+    <section className="bg-[#fcfbf9]">
+      <div className="max-w-[80rem] mx-auto px-[5%]">
+        <div className="pt-28 pb-16 text-center">
+          <div ref={ref}>
+            <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
+              <div className="gradient-eyebrow inline-block">
+                <span className="text-style-tagline">Our Capabilities</span>
+              </div>
             </div>
+            <h2
+              className={`text-[#001a2b] fade-up${inView ? " in-view" : ""}`}
+              style={{ transitionDelay: "100ms" }}
+            >
+              How we build systems
+            </h2>
           </div>
-          <h2 className={`text-[#001a2b] fade-up${inView ? " in-view" : ""}`} style={{ transitionDelay: "100ms" }}>
-            How we build systems
-          </h2>
         </div>
       </div>
     </section>
   );
 }
 
-function CapabilityCard({ cap }: { cap: typeof capabilities[0] }) {
-  const { ref: textRef, inView: textInView } = useInView<HTMLDivElement>();
-  const { ref: imgRef, inView: imgInView } = useInView<HTMLDivElement>({ threshold: 0.1 });
-  return (
-    <div className="mb-16 last:mb-0">
-      {/* Sticky header bar */}
-      <div className="sticky top-0 z-10 bg-[#001a2b] text-white py-4 px-6 rounded-lg mb-8 flex items-center gap-4">
-        <span className="text-2xl font-bold gold-highlight-text">{cap.number}</span>
-        <h3 className="text-xl lg:text-2xl font-semibold">{cap.title}</h3>
-      </div>
+/* ─────────────────────────────────────────
+   CAPABILITY CARD (sticky stacking)
+───────────────────────────────────────── */
 
-      {/* Two-column content */}
-      <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
-        {/* Left - text */}
-        <div ref={textRef} className="space-y-8">
-          <div className={`fade-up${textInView ? " in-view" : ""}`}>
-            <h4 className="text-lg font-bold text-[#001a2b] mb-3">The Problem:</h4>
-            <p className="text-[#050707]/80 leading-relaxed">{cap.problem}</p>
-          </div>
-          <div className={`fade-up${textInView ? " in-view" : ""}`} style={{ transitionDelay: "120ms" }}>
-            <h4 className="text-lg font-bold text-[#001a2b] mb-3">Our Solution:</h4>
-            <p className="text-[#050707]/80 leading-relaxed">{cap.solution}</p>
-          </div>
-          <div className={`fade-up${textInView ? " in-view" : ""}`} style={{ transitionDelay: "240ms" }}>
-            <h4 className="text-lg font-bold text-[#001a2b] mb-3">Where It&apos;s Used:</h4>
-            <ul className="space-y-3">
-              {cap.usedIn.map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <Image
-                    src="/images/coral-bullet.svg"
-                    alt=""
-                    width={20}
-                    height={20}
-                    className="shrink-0 mt-0.5 rounded-none"
-                  />
-                  <span className="text-[#050707]/80">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+/* Stacking offsets from Webflow layout357 CSS */
+const itemStyles: Record<string, React.CSSProperties> = {
+  "content-item-1": { top: 0,       marginBottom: "12rem" },
+  "content-item-2": { top: "4rem",  marginTop: "-8rem",  marginBottom: "8rem" },
+  "content-item-3": { top: "8rem",  marginTop: "-4rem",  marginBottom: "4rem" },
+  "content-item-4": { top: 0,       marginBottom: "4rem" },
+  "content-item-5": { top: "12rem" },
+};
+
+function CapabilityCard({ cap }: { cap: typeof capabilities[0] }) {
+  const { ref: contentRef, inView: contentInView } = useInView<HTMLDivElement>({ threshold: 0.05 });
+
+  return (
+    <div
+      className="sticky bg-[#fcfbf9] border-t border-[#05070726]"
+      style={itemStyles[cap.itemClass]}
+    >
+      <div className="max-w-[80rem] mx-auto px-[5%]">
+        {/* Sticky top bar — number + title */}
+        <div className="flex items-center h-16 gap-6">
+          <span
+            style={{
+              fontFamily: '"Open Sans", sans-serif',
+              fontSize: "1.125rem",
+              color: "#001a2b",
+              marginRight: "1.5rem",
+              flexShrink: 0,
+            }}
+          >
+            {cap.number}
+          </span>
+          <span
+            style={{
+              fontFamily: '"Open Sans", sans-serif',
+              fontSize: "1.125rem",
+              color: "#001a2b",
+            }}
+          >
+            {cap.title}
+          </span>
         </div>
 
-        {/* Right - image */}
-        <div ref={imgRef} className={`relative fade-in${imgInView ? " in-view" : ""}`}>
-          <Image
-            src={cap.image}
-            alt={cap.title}
-            width={1200}
-            height={800}
-            loading="lazy"
-            className="w-full h-auto rounded-2xl"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+        {/* Content — 2-col grid */}
+        <div
+          ref={contentRef}
+          className={`grid lg:grid-cols-2 items-center py-12 gap-20 fade-up${contentInView ? " in-view" : ""}`}
+        >
+          {/* Left — problem / solution / used-in */}
+          <div className="flex flex-col gap-4">
+            {/* The Problem */}
+            <div>
+              <h6
+                style={{
+                  fontFamily: "p22-underground, var(--font-archivo), sans-serif",
+                  fontSize: "1.375rem",
+                  fontWeight: 400,
+                  letterSpacing: "-1px",
+                  lineHeight: 1.4,
+                  color: "#001a2b",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                The Problem:
+              </h6>
+              <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>
+                {cap.problem}
+              </p>
+            </div>
+
+            {/* Our Solution */}
+            <div>
+              <h6
+                style={{
+                  fontFamily: "p22-underground, var(--font-archivo), sans-serif",
+                  fontSize: "1.375rem",
+                  fontWeight: 400,
+                  letterSpacing: "-1px",
+                  lineHeight: 1.4,
+                  color: "#001a2b",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Our Solution:
+              </h6>
+              <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>
+                {cap.solution}
+              </p>
+            </div>
+
+            {/* Where It's Used */}
+            <div>
+              <h6
+                style={{
+                  fontFamily: "p22-underground, var(--font-archivo), sans-serif",
+                  fontSize: "1.375rem",
+                  fontWeight: 400,
+                  letterSpacing: "-1px",
+                  lineHeight: 1.4,
+                  color: "#001a2b",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Where It&apos;s Used:
+              </h6>
+              <div className="flex flex-col gap-1">
+                {cap.usedIn.map((item, i) => (
+                  <div key={i} className="flex flex-row items-center gap-2">
+                    <Image
+                      src="/images/coral-bullet.svg"
+                      alt=""
+                      width={8}
+                      height={8}
+                      className="shrink-0 rounded-none"
+                    />
+                    <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right — image */}
+          <div
+            className="overflow-hidden"
+            style={{ borderRadius: "40px" }}
+          >
+            <Image
+              src={cap.image}
+              alt={cap.title}
+              width={1200}
+              height={900}
+              loading="lazy"
+              className="w-full object-cover rounded-none"
+              style={{ height: "60vh" }}
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
+/* ─────────────────────────────────────────
+   CTA SECTION
+───────────────────────────────────────── */
+
 function CTASection() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
   return (
-    <section className="relative py-16 lg:py-24 overflow-hidden">
-      <div className="absolute inset-0">
-        <Image src="/images/Hero.jpg" alt="" fill className="object-cover rounded-none" sizes="100vw" />
-        <div className="absolute inset-0 bg-[#001a2b]/80" />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div ref={ref} className="max-w-3xl mx-auto text-center">
-          <h2 className={`text-white mb-4 fade-up${inView ? " in-view" : ""}`}>
-            Start a conversation
-          </h2>
-          <p
-            className={`text-lg text-white/80 mb-8 leading-relaxed fade-up${inView ? " in-view" : ""}`}
-            style={{ transitionDelay: "120ms" }}
-          >
-            If you&apos;re exploring how to modernize systems without
-            compromising control or reliability, we&apos;re happy to talk.
-          </p>
-          <div className={`fade-up${inView ? " in-view" : ""}`} style={{ transitionDelay: "240ms" }}>
-            <Link href="/contact" className="button-gradient text-lg">
-              Start a Conversation
-            </Link>
+    <section
+      className="relative"
+      style={{
+        backgroundImage: "url('/images/Hero.jpg')",
+        backgroundPosition: "50%",
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="absolute inset-0 bg-[#001a2b]/80 pointer-events-none" />
+      <div className="max-w-[80rem] mx-auto px-[5%] relative z-10">
+        <div className="py-28 text-center">
+          <div ref={ref} className="max-w-[60rem] mx-auto">
+            {/* Eyebrow */}
+            <div className={`mb-4 fade-up${inView ? " in-view" : ""}`}>
+              <div className="gradient-eyebrow midnight-blue inline-block">
+                <span className="text-style-tagline midnight-blue">How Engagement Starts</span>
+              </div>
+            </div>
+            {/* H2 */}
+            <h2
+              className={`text-white mb-6 fade-up${inView ? " in-view" : ""}`}
+              style={{ transitionDelay: "100ms" }}
+            >
+              A clear, low-risk path forward
+            </h2>
+            {/* Body */}
+            <p
+              className={`text-white/80 leading-relaxed mb-10 fade-up${inView ? " in-view" : ""}`}
+              style={{ fontSize: "1.125rem", transitionDelay: "200ms" }}
+            >
+              Most Ten Sparrows engagements begin with an assessment or pilot.
+              This allows systems to be tested in real conditions, validated with
+              real users, and refined before broader deployment.
+            </p>
+            {/* Button — solid gradient fill */}
+            <div className={`fade-up${inView ? " in-view" : ""}`} style={{ transitionDelay: "300ms" }}>
+              <Link href="/contact" className="button-solid">
+                Start a Conversation
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -311,7 +474,9 @@ function CTASection() {
   );
 }
 
-/* ---------- main component ---------- */
+/* ─────────────────────────────────────────
+   MAIN EXPORT
+───────────────────────────────────────── */
 
 export function WhatWeDoContent() {
   return (
@@ -321,13 +486,12 @@ export function WhatWeDoContent() {
       <RealitySection />
       <CapabilitiesHeader />
 
-      <section className="off-white-background py-8 lg:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {capabilities.map((cap) => (
-            <CapabilityCard key={cap.number} cap={cap} />
-          ))}
-        </div>
-      </section>
+      {/* Sticky stacking capabilities */}
+      <div>
+        {capabilities.map((cap) => (
+          <CapabilityCard key={cap.number} cap={cap} />
+        ))}
+      </div>
 
       <CTASection />
     </>

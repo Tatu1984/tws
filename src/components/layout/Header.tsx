@@ -74,7 +74,7 @@ export function Header() {
           <div className="hidden lg:flex items-center">
             <Link
               href="/contact"
-              className="button-gradient-dark text-sm"
+              className="button-solid text-sm"
             >
               Let&apos;s Talk
             </Link>
@@ -109,7 +109,7 @@ export function Header() {
                   <Link
                     href="/contact"
                     onClick={() => setIsOpen(false)}
-                    className="block w-full text-center button-gradient-dark"
+                    className="block w-full text-center button-solid"
                   >
                     Let&apos;s Talk
                   </Link>

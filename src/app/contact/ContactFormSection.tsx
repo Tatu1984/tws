@@ -96,7 +96,7 @@ export function ContactFormSection() {
                 href="https://outlook.office.com/book/TenSparrowsBooking@tensparrows.com/?ismsaljsauthenabled=true"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="button-gradient-dark block text-center w-full"
+                className="button-solid block text-center w-full"
               >
                 Schedule Your Session
               </a>

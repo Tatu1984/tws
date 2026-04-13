@@ -21,12 +21,18 @@ export function CTASection({
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
 
   return (
-    <section
-      className="relative py-16 lg:py-24 overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url('${backgroundImage}')` }}
-    >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-[#001a2b]/60 z-0" />
+    <section className="relative py-28 overflow-hidden">
+      {/* Background image wrapper — matches Webflow cta27_background-image-wrapper */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url('${backgroundImage}')`,
+          backgroundPosition: "50% 30%",
+          backgroundSize: "cover",
+        }}
+      />
+      {/* Overlay layer — matches Webflow image-overlay-layer */}
+      <div className="absolute inset-0 z-1" style={{ backgroundColor: "#05070766" }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div ref={ref} className="max-w-3xl mx-auto text-center">
@@ -43,7 +49,7 @@ export function CTASection({
             className={`fade-up${inView ? " in-view" : ""}`}
             style={{ transitionDelay: "240ms" }}
           >
-            <Link href={ctaLink} className="button-gradient-dark text-lg">
+            <Link href={ctaLink} className="button-solid">
               {ctaText}
             </Link>
           </div>
