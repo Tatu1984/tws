@@ -404,37 +404,45 @@ html {
 }
 
 /* Webflow-matching design system */
-/* Eyebrow pill — white fill, coral→gold gradient border */
+/* Eyebrow pill — matches Webflow: gradient wrapper (2px padding) + inner white pill */
 .gradient-eyebrow {
+  background-image: linear-gradient(180deg, #e57368, #f3b44a);
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  padding: 2px;
   display: inline-block;
-  padding: 6px 20px;
-  border-radius: 100px;
-  background:
-    linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(135deg, #e57368, #f3b44a) border-box;
-  border: 1.5px solid transparent;
 }
 
-/* Dark-background variant: semi-transparent fill */
+/* Dark-background variant: same gradient border, inner bg matches dark surface */
 .gradient-eyebrow.midnight-blue,
 .gradient-eyebrow-dark {
-  background:
-    linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)) padding-box,
-    linear-gradient(135deg, #e57368, #f3b44a) border-box;
-  border: 1.5px solid transparent;
+  background-image: linear-gradient(180deg, #e57368, #f3b44a);
+  border-radius: 20px;
+  padding: 2px;
+  display: inline-block;
 }
 
+/* Inner tagline pill — matches Webflow .text-style-tagline */
 .text-style-tagline {
+  background-color: #fff;
+  border-radius: 20px;
+  display: inline-block;
+  padding: 6px 20px;
   font-family: Archivo, var(--font-archivo), sans-serif;
   font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-weight: 500;
+  letter-spacing: 1px;
   text-transform: none;
   color: #001a2b;
   line-height: 1;
+  text-decoration: none;
 }
 
+/* Dark bg variant: inner pill uses midnight bg */
 .text-style-tagline.midnight-blue {
+  background-color: #001a2b;
   color: #fff;
 }
 
