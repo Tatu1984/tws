@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -17,7 +18,12 @@ const footerLinks = {
   ],
 };
 
+const COPYRIGHT_TOOLTIP =
+  "This website and all associated content—including text, graphics, logos, designs, and software—are the exclusive property of Ten Sparrows, LLC. No part of this site may be reproduced, distributed, modified, or transmitted in any form or by any means without prior written permission from Ten Sparrows, LLC. Unauthorized use is strictly prohibited.";
+
 export function Footer() {
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+
   return (
     <footer className="bg-[#001a2b] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -98,9 +104,29 @@ export function Footer() {
           {/* Bottom Bar */}
           <div className="pt-6 lg:pt-8">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-white/50 text-center sm:text-left">
-                © 2025 Ten Sparrows. All rights reserved.
-              </p>
+              <div className="relative">
+                <button
+                  onClick={() => setTooltipVisible((v) => !v)}
+                  className="text-sm text-white/50 text-center sm:text-left cursor-pointer hover:text-white/70 transition-colors select-none bg-transparent border-none p-0"
+                >
+                  © 2026 Ten Sparrows, LLC. All rights reserved.
+                </button>
+                {tooltipVisible && (
+                  <>
+                    {/* Backdrop to close on outside click */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setTooltipVisible(false)}
+                    />
+                    <div className="absolute bottom-full left-0 mb-3 z-50 w-80 sm:w-96 bg-[#001422] border border-white/10 rounded-xl p-4 shadow-2xl">
+                      <p className="text-xs text-white/70 leading-relaxed">
+                        {COPYRIGHT_TOOLTIP}
+                      </p>
+                      <div className="absolute -bottom-1.5 left-4 w-3 h-3 bg-[#001422] border-r border-b border-white/10 rotate-45" />
+                    </div>
+                  </>
+                )}
+              </div>
               <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
                 {footerLinks.legal.map((link) => (
                   <Link

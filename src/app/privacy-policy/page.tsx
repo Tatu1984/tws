@@ -1,6 +1,5 @@
 "use client";
 
-import { Metadata } from "next";
 import { Header, Footer } from "@/components/layout";
 import { useInView } from "@/hooks/useInView";
 
@@ -12,67 +11,125 @@ export default function PrivacyPolicyPage() {
     <>
       <Header />
       <main>
-        <section className="bg-[#001a2b] pt-32 lg:pt-40 pb-16 lg:pb-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div ref={heroRef} className="max-w-3xl mx-auto text-center">
-              <h1
-                className={`text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight fade-up${heroInView ? " in-view" : ""}`}
-              >
-                Privacy Policy
-              </h1>
-              <p
-                className={`text-lg text-white/70 fade-up${heroInView ? " in-view" : ""}`}
-                style={{ transitionDelay: "100ms" }}
-              >
-                Last updated: January 2025
-              </p>
+        {/* Hero — matches other inside-page heroes */}
+        <header className="off-white-background">
+          <div className="px-[5%] pt-[calc(7rem+80px)] pb-0">
+            <div className="w-full max-w-[80rem] mx-auto">
+              <div ref={heroRef} className="w-full max-w-[60rem] mx-auto text-center pb-16">
+                <div className={`mb-4 fade-up${heroInView ? " in-view" : ""}`}>
+                  <div className="gradient-eyebrow inline-block">
+                    <span className="text-style-tagline">Legal</span>
+                  </div>
+                </div>
+                <h1
+                  className={`text-color-midnight mb-4 fade-up${heroInView ? " in-view" : ""}`}
+                  style={{ transitionDelay: "100ms" }}
+                >
+                  Privacy Policy
+                </h1>
+                <p
+                  className={`text-[1.125rem] text-[#050707]/60 font-normal fade-up${heroInView ? " in-view" : ""}`}
+                  style={{ transitionDelay: "200ms" }}
+                >
+                  Effective Date: December 22, 2025
+                </p>
+              </div>
             </div>
           </div>
-        </section>
+        </header>
 
-        <section className="bg-[#fcfbf9] py-16 lg:py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Body */}
+        <section className="off-white-background px-[5%] py-[7rem]">
+          <div className="w-full max-w-[80rem] mx-auto">
             <div
               ref={bodyRef}
-              className={`max-w-3xl mx-auto prose prose-lg fade-up${bodyInView ? " in-view" : ""}`}
+              className={`max-w-[48rem] mx-auto fade-up${bodyInView ? " in-view" : ""}`}
             >
-              <h2 className="text-2xl font-bold text-[#001a2b] mb-4">Information We Collect</h2>
-              <p className="text-[#050707]/80 mb-6">
-                We collect information you provide directly to us, such as when
-                you fill out a contact form, request a consultation, or
-                communicate with us via email.
+              <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed mb-10">
+                Ten Sparrows (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;) operates the website tensparrows.com (the &ldquo;Site&rdquo;).
+                This Privacy Policy explains how we collect, use, and protect your information.
               </p>
 
-              <h2 className="text-2xl font-bold text-[#001a2b] mb-4 mt-8">How We Use Your Information</h2>
-              <p className="text-[#050707]/80 mb-6">
-                We use the information we collect to respond to your inquiries,
-                provide our services, and communicate with you about our
-                products and services.
-              </p>
+              <div className="space-y-10">
 
-              <h2 className="text-2xl font-bold text-[#001a2b] mb-4 mt-8">Information Sharing</h2>
-              <p className="text-[#050707]/80 mb-6">
-                We do not sell, trade, or otherwise transfer your personal
-                information to third parties without your consent, except as
-                required by law.
-              </p>
+                <div>
+                  <h2 className="text-color-midnight mb-4" style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.4 }}>
+                    Information We Collect
+                  </h2>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed mb-4">
+                    We collect only the information you choose to provide to us, including:
+                  </p>
+                  <ul className="list-disc pl-6 space-y-2 text-[1.125rem] text-[#050707]/80 leading-relaxed mb-4">
+                    <li>Name and email address submitted through our contact form</li>
+                  </ul>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed mb-2">We do not:</p>
+                  <ul className="list-disc pl-6 space-y-2 text-[1.125rem] text-[#050707]/80 leading-relaxed">
+                    <li>Use analytics or tracking tools</li>
+                    <li>Process payments</li>
+                    <li>Collect sensitive personal data</li>
+                    <li>Collect information from children under 13</li>
+                  </ul>
+                </div>
 
-              <h2 className="text-2xl font-bold text-[#001a2b] mb-4 mt-8">Data Security</h2>
-              <p className="text-[#050707]/80 mb-6">
-                We implement appropriate security measures to protect your
-                personal information against unauthorized access, alteration,
-                disclosure, or destruction.
-              </p>
+                <div>
+                  <h2 className="text-color-midnight mb-4" style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.4 }}>
+                    How We Use Your Information
+                  </h2>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed mb-4">
+                    We use the information you provide solely to:
+                  </p>
+                  <ul className="list-disc pl-6 space-y-2 text-[1.125rem] text-[#050707]/80 leading-relaxed mb-4">
+                    <li>Respond to inquiries</li>
+                    <li>Communicate directly with you regarding your request</li>
+                  </ul>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed">
+                    We do not sell, rent, or share your information with third parties.
+                  </p>
+                </div>
 
-              <h2 className="text-2xl font-bold text-[#001a2b] mb-4 mt-8">Contact Us</h2>
-              <p className="text-[#050707]/80 mb-6">
-                If you have questions about this Privacy Policy, please contact
-                us at{" "}
-                <a href="mailto:info@tensparrows.com" className="text-[#e57368] hover:underline">
-                  info@tensparrows.com
-                </a>
-                .
-              </p>
+                <div>
+                  <h2 className="text-color-midnight mb-4" style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.4 }}>
+                    Cookies
+                  </h2>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed">
+                    At this time, we do not intentionally use cookies for tracking or analytics purposes.
+                    Some basic cookies may be used by the website platform to ensure proper site functionality.
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="text-color-midnight mb-4" style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.4 }}>
+                    Data Security
+                  </h2>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed">
+                    We take reasonable steps to protect your information, but no method of transmission
+                    over the internet is 100% secure.
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="text-color-midnight mb-4" style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.4 }}>
+                    Children&apos;s Privacy
+                  </h2>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed">
+                    This website is not directed toward children under the age of 13, and we do not
+                    knowingly collect personal information from children.
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="text-color-midnight mb-4" style={{ fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.4 }}>
+                    Contact Us
+                  </h2>
+                  <p className="text-[1.125rem] text-[#050707]/80 leading-relaxed">
+                    If you have questions about this Privacy Policy, contact us at:{" "}
+                    <a href="mailto:info@tensparrows.com" className="text-[#e57368] hover:underline">
+                      info@tensparrows.com
+                    </a>
+                  </p>
+                </div>
+
+              </div>
             </div>
           </div>
         </section>
