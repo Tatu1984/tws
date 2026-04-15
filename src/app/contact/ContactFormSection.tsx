@@ -62,29 +62,19 @@ export function ContactFormSection() {
     <section className="off-white-background px-[5%] py-[7rem]">
       {/* container-large: max-width 80rem centered */}
       <div className="w-full max-w-[80rem] mx-auto">
-        {/* contact6_content: grid-template-columns max-content auto, gap 3rem */}
-        <div
-          className="items-start"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'max-content auto',
-            columnGap: '3rem',
-            rowGap: '4rem',
-          }}
-        >
+        {/* Single col on mobile, left card + form side-by-side on lg */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
 
-          {/* Left — midnight-bg card: max-width 400px, padding 30px, border-radius 20px */}
+          {/* Left — midnight-bg card: full width mobile, max-w-[400px] on desktop */}
           <div
             ref={leftRef}
-            className={`fade-left${leftInView ? ' in-view' : ''}`}
+            className={`w-full lg:w-auto lg:max-w-[400px] lg:shrink-0 fade-left${leftInView ? ' in-view' : ''}`}
             style={{
               backgroundColor: '#001a2b',
               backgroundImage: "linear-gradient(rgba(0,26,43,0.8), rgba(0,26,43,0.8)), url('/images/imgi_50_image.jpeg')",
               backgroundPosition: '0 0, 50%',
               backgroundSize: 'auto, contain',
               borderRadius: '20px',
-              width: 'auto',
-              maxWidth: '400px',
               padding: '30px',
             }}
           >
@@ -154,10 +144,10 @@ export function ContactFormSection() {
             </p>
           </div>
 
-          {/* Right — contact6_form: white bg, border-radius 10px, padding 30px, box-shadow */}
+          {/* Right — fills remaining space on desktop, full width on mobile */}
           <div
             ref={rightRef}
-            className={`fade-right${rightInView ? ' in-view' : ''}`}
+            className={`w-full min-w-0 fade-right${rightInView ? ' in-view' : ''}`}
           >
             {status === 'success' ? (
               <div
@@ -188,8 +178,8 @@ export function ContactFormSection() {
                   columnGap: '1.5rem',
                 }}
               >
-                {/* form_field-2col: 2-col grid, gap 1.5rem */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '1.5rem', rowGap: '1.5rem' }}>
+                {/* form_field-2col: stack on mobile, 2-col on sm+ */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-normal text-[#050707] mb-2">
                       First name
@@ -263,15 +253,8 @@ export function ContactFormSection() {
                       How would you describe yourself?
                     </label>
                   </div>
-                  {/* form_radio-2col: 2-col grid, col-gap 1.5rem, row-gap 0.875rem */}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      columnGap: '1.5rem',
-                      rowGap: '0.875rem',
-                    }}
-                  >
+                  {/* form_radio-2col: stack on mobile, 2-col on sm+ */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3.5">
                     {roles.map((role) => (
                       <label
                         key={role}

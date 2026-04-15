@@ -275,148 +275,127 @@ function CapabilitiesHeader() {
    CAPABILITY CARD (sticky stacking)
 ───────────────────────────────────────── */
 
-/* Stacking offsets from Webflow layout357 CSS */
-const itemStyles: Record<string, React.CSSProperties> = {
-  "content-item-1": { top: 0,       marginBottom: "12rem" },
-  "content-item-2": { top: "4rem",  marginTop: "-8rem",  marginBottom: "8rem" },
-  "content-item-3": { top: "8rem",  marginTop: "-4rem",  marginBottom: "4rem" },
-  "content-item-4": { top: 0,       marginBottom: "4rem" },
+/*
+  Webflow layout357 sticky stacking — PURE CSS, no JS.
+  Desktop: position sticky with top offsets + negative margins for overlap.
+  Tablet/mobile: position relative, no margins, all content always visible.
+*/
+const capDesktopStyle: Record<string, React.CSSProperties> = {
+  "content-item-1": { top: 0, marginBottom: "12rem" },
+  "content-item-2": { top: "4rem", marginTop: "-8rem", marginBottom: "8rem" },
+  "content-item-3": { top: "8rem", marginTop: "-4rem", marginBottom: "4rem" },
+  "content-item-4": { top: 0, marginBottom: "4rem" },
   "content-item-5": { top: "12rem" },
 };
 
 function CapabilityCard({ cap }: { cap: typeof capabilities[0] }) {
   const { ref: contentRef, inView: contentInView } = useInView<HTMLDivElement>({ threshold: 0.05 });
 
+  const subheadingStyle: React.CSSProperties = {
+    fontFamily: "p22-underground, var(--font-archivo), sans-serif",
+    fontSize: "1.375rem",
+    fontWeight: 400,
+    letterSpacing: "-1px",
+    lineHeight: 1.4,
+    color: "#001a2b",
+    marginBottom: "0.5rem",
+  };
+
   return (
-    <div
-      className="sticky bg-[#fcfbf9] border-t border-[#05070726]"
-      style={itemStyles[cap.itemClass]}
-    >
-      <div className="max-w-[80rem] mx-auto px-[5%]">
-        {/* Sticky top bar — number + title */}
-        <div className="flex items-center h-16 gap-6">
-          <span
-            style={{
-              fontFamily: '"Open Sans", sans-serif',
-              fontSize: "1.125rem",
-              color: "#001a2b",
-              marginRight: "1.5rem",
-              flexShrink: 0,
-            }}
-          >
-            {cap.number}
-          </span>
-          <span
-            style={{
-              fontFamily: '"Open Sans", sans-serif',
-              fontSize: "1.125rem",
-              color: "#001a2b",
-            }}
-          >
-            {cap.title}
-          </span>
-        </div>
-
-        {/* Content — 2-col grid */}
-        <div
-          ref={contentRef}
-          className={`grid lg:grid-cols-2 items-center py-12 gap-20 fade-up${contentInView ? " in-view" : ""}`}
-        >
-          {/* Left — problem / solution / used-in */}
-          <div className="flex flex-col gap-4">
-            {/* The Problem */}
-            <div>
-              <h6
-                style={{
-                  fontFamily: "p22-underground, var(--font-archivo), sans-serif",
-                  fontSize: "1.375rem",
-                  fontWeight: 400,
-                  letterSpacing: "-1px",
-                  lineHeight: 1.4,
-                  color: "#001a2b",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                The Problem:
-              </h6>
-              <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>
-                {cap.problem}
-              </p>
-            </div>
-
-            {/* Our Solution */}
-            <div>
-              <h6
-                style={{
-                  fontFamily: "p22-underground, var(--font-archivo), sans-serif",
-                  fontSize: "1.375rem",
-                  fontWeight: 400,
-                  letterSpacing: "-1px",
-                  lineHeight: 1.4,
-                  color: "#001a2b",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                Our Solution:
-              </h6>
-              <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>
-                {cap.solution}
-              </p>
-            </div>
-
-            {/* Where It's Used */}
-            <div>
-              <h6
-                style={{
-                  fontFamily: "p22-underground, var(--font-archivo), sans-serif",
-                  fontSize: "1.375rem",
-                  fontWeight: 400,
-                  letterSpacing: "-1px",
-                  lineHeight: 1.4,
-                  color: "#001a2b",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                Where It&apos;s Used:
-              </h6>
-              <div className="flex flex-col gap-1">
-                {cap.usedIn.map((item, i) => (
-                  <div key={i} className="flex flex-row items-center gap-2">
-                    <Image
-                      src="/images/coral-bullet.svg"
-                      alt=""
-                      width={8}
-                      height={8}
-                      className="shrink-0 rounded-none"
-                    />
-                    <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>
-                      {item}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+    <>
+      {/* ── DESKTOP (lg+): sticky card with full 2-column layout ── */}
+      <div
+        className="hidden lg:block sticky bg-[#fcfbf9] border-t border-[#05070726]"
+        style={capDesktopStyle[cap.itemClass]}
+      >
+        <div className="max-w-[80rem] mx-auto px-[5%]">
+          {/* Sticky bar */}
+          <div className="flex items-center h-16 gap-6">
+            <span style={{ fontFamily: '"Open Sans", sans-serif', fontSize: "1.125rem", color: "#001a2b", marginRight: "1.5rem", flexShrink: 0 }}>
+              {cap.number}
+            </span>
+            <span style={{ fontFamily: '"Open Sans", sans-serif', fontSize: "1.125rem", color: "#001a2b" }}>
+              {cap.title}
+            </span>
           </div>
 
-          {/* Right — image */}
+          {/* 2-column grid: text left, image right */}
           <div
-            className="overflow-hidden"
-            style={{ borderRadius: "40px" }}
+            ref={contentRef}
+            className={`grid grid-cols-2 items-center py-12 gap-20 fade-up${contentInView ? " in-view" : ""}`}
           >
-            <Image
-              src={cap.image}
-              alt={cap.title}
-              width={1200}
-              height={900}
-              loading="lazy"
-              className="w-full object-cover rounded-none"
-              style={{ height: "60vh" }}
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+            <div className="flex flex-col gap-4">
+              <div>
+                <h6 style={subheadingStyle}>The Problem:</h6>
+                <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>{cap.problem}</p>
+              </div>
+              <div>
+                <h6 style={subheadingStyle}>Our Solution:</h6>
+                <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>{cap.solution}</p>
+              </div>
+              <div>
+                <h6 style={subheadingStyle}>Where It&apos;s Used:</h6>
+                <div className="flex flex-col gap-1">
+                  {cap.usedIn.map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Image src="/images/coral-bullet.svg" alt="" width={8} height={8} className="shrink-0 rounded-none" />
+                      <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="overflow-hidden" style={{ borderRadius: "40px" }}>
+              <Image src={cap.image} alt={cap.title} width={1200} height={900} loading="lazy" className="w-full object-cover rounded-none" style={{ height: "60vh" }} sizes="50vw" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* ── MOBILE/TABLET (<lg): static card, single column, all visible ── */}
+      <div className="lg:hidden bg-[#fcfbf9] border-t border-[#05070726] pb-8 sm:pb-14">
+        <div className="max-w-[80rem] mx-auto px-[5%]">
+          {/* Title bar */}
+          <div className="flex items-center h-16 gap-4">
+            <span style={{ fontFamily: '"Open Sans", sans-serif', fontSize: "1.125rem", color: "#001a2b", marginRight: "0.5rem", flexShrink: 0 }}>
+              {cap.number}
+            </span>
+            <span style={{ fontFamily: '"Open Sans", sans-serif', fontSize: "1.125rem", color: "#001a2b" }}>
+              {cap.title}
+            </span>
+          </div>
+
+          {/* Content: text first, then image below */}
+          <div className="flex flex-col gap-8 py-6">
+            <div className="flex flex-col gap-4">
+              <div>
+                <h6 style={subheadingStyle}>The Problem:</h6>
+                <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>{cap.problem}</p>
+              </div>
+              <div>
+                <h6 style={subheadingStyle}>Our Solution:</h6>
+                <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>{cap.solution}</p>
+              </div>
+              <div>
+                <h6 style={subheadingStyle}>Where It&apos;s Used:</h6>
+                <div className="flex flex-col gap-1">
+                  {cap.usedIn.map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Image src="/images/coral-bullet.svg" alt="" width={8} height={8} className="shrink-0 rounded-none" />
+                      <p style={{ fontSize: "0.875rem", color: "#050707cc", lineHeight: 1.6 }}>{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {/* Image — portrait on mobile, tall on tablet */}
+            <div className="overflow-hidden rounded-3xl">
+              <Image src={cap.image} alt={cap.title} width={1200} height={900} loading="lazy" className="w-full object-cover rounded-none" style={{ height: "30rem" }} sizes="100vw" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

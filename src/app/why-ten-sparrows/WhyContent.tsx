@@ -136,21 +136,8 @@ export function WhyContent() {
       <section className="off-white-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div
-              ref={leadImgRef}
-              className={`relative fade-in${leadImgInView ? " in-view" : ""}`}
-            >
-              <Image
-                src="/images/tech-people-trying-achieve-ambitious-sustainability-goals.jpg"
-                alt="Experienced leadership team"
-                width={1200}
-                height={800}
-                loading="lazy"
-                className="w-full h-auto rounded-2xl"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-            <div ref={leadTextRef}>
+            {/* Text — first in DOM so it shows above image on mobile */}
+            <div ref={leadTextRef} className="order-1 lg:order-2">
               <div className={`mb-4 fade-up${leadTextInView ? " in-view" : ""}`}>
                 <div className="gradient-eyebrow">
                   <span className="text-style-tagline">Experienced Leadership</span>
@@ -175,6 +162,22 @@ export function WhyContent() {
                 environments it has to survive in—and the people who depend on
                 it every day.
               </p>
+            </div>
+
+            {/* Image — below text on mobile, left on desktop */}
+            <div
+              ref={leadImgRef}
+              className={`relative order-2 lg:order-1 fade-in${leadImgInView ? " in-view" : ""}`}
+            >
+              <Image
+                src="/images/tech-people-trying-achieve-ambitious-sustainability-goals.jpg"
+                alt="Experienced leadership team"
+                width={1200}
+                height={800}
+                loading="lazy"
+                className="w-full h-auto rounded-2xl"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
           </div>
         </div>

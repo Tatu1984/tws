@@ -11,23 +11,8 @@ export function SolutionSection() {
     <section className="off-white-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Image — left on all sizes */}
-          <div ref={imgRef} className={`relative fade-in${imgInView ? " in-view" : ""}`}>
-            <div className="rounded-2xl overflow-hidden aspect-square">
-              <Image
-                src="/images/ChatGPT-Image-Dec-20-2025-07_58_03-AM.png"
-                alt="Micro data centers at the edge"
-                width={1024}
-                height={1024}
-                loading="lazy"
-                className="w-full h-full object-cover rounded-none"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-
-          {/* Text Content — right on all sizes */}
-          <div ref={textRef}>
+          {/* Text Content — first in DOM so it appears on top on mobile */}
+          <div ref={textRef} className="order-1 md:order-2">
             <div className={`mb-4 fade-up${textInView ? " in-view" : ""}`}>
               <div className="gradient-eyebrow">
                 <span className="text-style-tagline">Our Approach</span>
@@ -55,6 +40,21 @@ export function SolutionSection() {
               This approach is often called edge computing. At its core,
               it&apos;s about keeping critical intelligence close to the action.
             </p>
+          </div>
+
+          {/* Image — second in DOM, appears below text on mobile, left on desktop */}
+          <div ref={imgRef} className={`relative order-2 md:order-1 fade-in${imgInView ? " in-view" : ""}`}>
+            <div className="rounded-2xl overflow-hidden aspect-square">
+              <Image
+                src="/images/ChatGPT-Image-Dec-20-2025-07_58_03-AM.png"
+                alt="Micro data centers at the edge"
+                width={1024}
+                height={1024}
+                loading="lazy"
+                className="w-full h-full object-cover rounded-none"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
           </div>
         </div>
       </div>

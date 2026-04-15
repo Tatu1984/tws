@@ -45,7 +45,9 @@ export function WhoWeWorkWithTabs() {
 
       {/* Tabs Content */}
       <div className="max-w-[80rem] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+
+        {/* Desktop: side-by-side tabs + image */}
+        <div className="hidden lg:grid lg:grid-cols-2 gap-12">
           {/* Tab Menu */}
           <div className="space-y-0">
             {tabs.map((tab, index) => (
@@ -53,34 +55,70 @@ export function WhoWeWorkWithTabs() {
                 key={index}
                 onClick={() => setActiveTab(index)}
                 className={`w-full text-left py-5 border-b border-white/10 transition-all ${
-                  activeTab === index
-                    ? "opacity-100"
-                    : "opacity-60 hover:opacity-80"
+                  activeTab === index ? "opacity-100" : "opacity-60 hover:opacity-80"
                 }`}
               >
                 <h3 className="text-xl lg:text-2xl font-normal text-white">
                   {tab.title}
                 </h3>
                 {activeTab === index && tab.description && (
-                  <p className="text-white/70 mt-2 text-base">
-                    {tab.description}
-                  </p>
+                  <p className="text-white/70 mt-2 text-base">{tab.description}</p>
                 )}
               </button>
             ))}
           </div>
 
-          {/* Tab Image */}
+          {/* Image */}
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
               src={tabs[activeTab].image}
               alt={tabs[activeTab].title}
               fill
               className="object-cover rounded-2xl"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="50vw"
             />
           </div>
         </div>
+
+        {/* Mobile: each tab — title button, then image + description below when active */}
+        <div className="lg:hidden space-y-0">
+          {tabs.map((tab, index) => (
+            <div key={index} className="border-b border-white/10">
+              <button
+                onClick={() => setActiveTab(index === activeTab ? -1 : index)}
+                className={`w-full text-left py-5 transition-all ${
+                  activeTab === index ? "opacity-100" : "opacity-60"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-xl font-normal text-white">{tab.title}</h3>
+                  <span className="text-white/50 text-xl shrink-0">
+                    {activeTab === index ? "−" : "+"}
+                  </span>
+                </div>
+              </button>
+
+              {activeTab === index && (
+                <div className="pb-6 flex flex-col gap-4">
+                  {/* Image first — portrait aspect for vertical feel */}
+                  <div className="relative w-full rounded-2xl overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                    <Image
+                      src={tab.image}
+                      alt={tab.title}
+                      fill
+                      className="object-cover"
+                      sizes="100vw"
+                    />
+                  </div>
+                  {tab.description && (
+                    <p className="text-white/70 text-base">{tab.description}</p>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );

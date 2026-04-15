@@ -19,23 +19,8 @@ export function TargetAudienceSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center">
 
-          {/* Image — left column */}
-          <div ref={imgRef} className={`relative fade-in${imgInView ? " in-view" : ""}`}>
-            <div className="rounded-2xl overflow-hidden aspect-square">
-              <Image
-                src="/images/ChatGPT-Image-Dec-20-2025-08_06_42-AM.png"
-                alt="Who we work with"
-                width={1024}
-                height={1024}
-                loading="lazy"
-                className="w-full h-full object-cover rounded-none"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-
-          {/* Text Content — right column */}
-          <div ref={textRef}>
+          {/* Text Content — first in DOM so it appears above image on mobile */}
+          <div ref={textRef} className="order-1 md:order-2">
             <div className={`mb-4 fade-up${textInView ? " in-view" : ""}`}>
               <div className="gradient-eyebrow">
                 <span className="text-style-tagline">Who We Work With</span>
@@ -79,6 +64,21 @@ export function TargetAudienceSection() {
                   <span className="text-[#001a2b] text-lg">{audience}</span>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Image — second in DOM, below text on mobile; left column on desktop */}
+          <div ref={imgRef} className={`relative order-2 md:order-1 fade-in${imgInView ? " in-view" : ""}`}>
+            <div className="rounded-2xl overflow-hidden aspect-square">
+              <Image
+                src="/images/ChatGPT-Image-Dec-20-2025-08_06_42-AM.png"
+                alt="Who we work with"
+                width={1024}
+                height={1024}
+                loading="lazy"
+                className="w-full h-full object-cover rounded-none"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
           </div>
 
