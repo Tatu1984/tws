@@ -4,13 +4,12 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { useInView } from "@/hooks/useInView";
-
-type PlanId = "free" | "starter" | "worker" | "assistant";
+import { ANNUAL_MONTHS_BILLED, type BillingInterval, type PlanId } from "@/lib/pricing";
 
 type PricingPlan = {
   id: PlanId;
   name: string;
-  price: number;
+  monthly: number;
   tagline: string;
   features: string[];
   ctaLabel: string;
@@ -22,7 +21,7 @@ const plans: PricingPlan[] = [
   {
     id: "free",
     name: "Free",
-    price: 0,
+    monthly: 0,
     tagline: "Get a feel for how Ten Sparrows fits your workflow.",
     features: [
       "1 active project",
@@ -35,7 +34,7 @@ const plans: PricingPlan[] = [
   {
     id: "starter",
     name: "Starter",
-    price: 22,
+    monthly: 22,
     tagline: "For small teams shipping their first real workloads.",
     features: [
       "Up to 10 active projects",
@@ -49,7 +48,7 @@ const plans: PricingPlan[] = [
   {
     id: "worker",
     name: "Worker",
-    price: 88,
+    monthly: 88,
     tagline: "Built for production teams who run real systems.",
     features: [
       "Unlimited projects",
@@ -64,7 +63,7 @@ const plans: PricingPlan[] = [
   {
     id: "assistant",
     name: "Assistant",
-    price: 110,
+    monthly: 110,
     tagline: "AI-assisted operations layered on top of Worker.",
     features: [
       "Everything in Worker",
@@ -77,15 +76,28 @@ const plans: PricingPlan[] = [
   },
 ];
 
+function formatPrice(plan: PricingPlan, interval: BillingInterval) {
+  const amount = interval === "year" ? plan.monthly * ANNUAL_MONTHS_BILLED : plan.monthly;
+  const fullMonthlyAnnual = plan.monthly * 12;
+  const savings = fullMonthlyAnnual - amount;
+  return {
+    amount,
+    suffix: interval === "year" ? "/yr" : "/mo",
+    fullMonthlyAnnual,
+    savings,
+  };
+}
+
 export function PricingCards() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.05 });
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<PlanId | null>(null);
+  const [interval, setInterval] = useState<BillingInterval>("month");
 
   const activeId: PlanId = hoveredId ?? DEFAULT_HIGHLIGHT_ID;
 
   async function handleSelect(plan: PricingPlan) {
-    if (plan.price === 0) {
+    if (plan.monthly === 0) {
       toast.success("You're on the Free plan — no checkout needed.");
       return;
     }
@@ -95,7 +107,7 @@ export function PricingCards() {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId: plan.id }),
+        body: JSON.stringify({ planId: plan.id, interval }),
       });
 
       const data: { url?: string; error?: string } = await res.json();
@@ -116,6 +128,49 @@ export function PricingCards() {
   return (
     <section className="off-white-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Billing-interval toggle */}
+        <div className="flex justify-center mb-12">
+          <div
+            role="group"
+            aria-label="Billing interval"
+            className="inline-flex items-center p-1 bg-white rounded-full border border-black/10 shadow-[0_2px_11px_rgba(161,161,161,0.15)]"
+          >
+            <button
+              type="button"
+              onClick={() => setInterval("month")}
+              aria-pressed={interval === "month"}
+              className={`px-6 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
+                interval === "month"
+                  ? "bg-[#001a2b] text-white shadow-sm"
+                  : "text-[#001a2b]/70 hover:text-[#001a2b]"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              type="button"
+              onClick={() => setInterval("year")}
+              aria-pressed={interval === "year"}
+              className={`flex items-center gap-2 px-6 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
+                interval === "year"
+                  ? "bg-[#001a2b] text-white shadow-sm"
+                  : "text-[#001a2b]/70 hover:text-[#001a2b]"
+              }`}
+            >
+              Yearly
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                  interval === "year"
+                    ? "bg-[#f3b44a] text-[#001a2b]"
+                    : "bg-[#f3b44a]/20 text-[#001a2b]"
+                }`}
+              >
+                Save 2 mo
+              </span>
+            </button>
+          </div>
+        </div>
+
         <div
           ref={ref}
           className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 stagger-children${inView ? " in-view" : ""}`}
@@ -123,6 +178,8 @@ export function PricingCards() {
           {plans.map((plan) => {
             const isLoading = loadingId === plan.id;
             const isActive = activeId === plan.id;
+            const { amount, suffix, fullMonthlyAnnual, savings } = formatPrice(plan, interval);
+            const showSavings = interval === "year" && savings > 0;
 
             return (
               <div
@@ -147,16 +204,30 @@ export function PricingCards() {
                   {plan.name}
                 </h3>
 
-                <div className="mb-4 flex items-baseline gap-1">
+                <div className="mb-1 flex items-baseline gap-1">
                   <span
                     className={`text-5xl font-bold ${isActive ? "text-white" : "text-[#001a2b]"}`}
                     style={{ fontFamily: 'p22-underground, var(--font-archivo), sans-serif', letterSpacing: '-1px' }}
                   >
-                    ${plan.price}
+                    ${amount.toLocaleString()}
                   </span>
                   <span className={`text-sm ${isActive ? "text-white/60" : "text-black/50"}`}>
-                    /mo
+                    {suffix}
                   </span>
+                </div>
+
+                {/* Reserve a constant slot so monthly/yearly toggle doesn't shift card height */}
+                <div className="min-h-[1.25rem] mb-3 text-xs">
+                  {showSavings ? (
+                    <span className={isActive ? "text-white/60" : "text-black/55"}>
+                      <span className="line-through mr-1.5">${fullMonthlyAnnual.toLocaleString()}</span>
+                      <span className={isActive ? "text-[#f3b44a] font-semibold" : "text-[#e57368] font-semibold"}>
+                        save ${savings.toLocaleString()}
+                      </span>
+                    </span>
+                  ) : (
+                    <span aria-hidden="true">&nbsp;</span>
+                  )}
                 </div>
 
                 <p

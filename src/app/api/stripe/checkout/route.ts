@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { PRICING_PLANS, type PlanId } from "@/lib/pricing";
+import {
+  PRICING_PLANS,
+  priceFor,
+  type BillingInterval,
+  type PlanId,
+} from "@/lib/pricing";
 
 export const runtime = "nodejs";
 
@@ -19,7 +24,7 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: { planId?: PlanId };
+  let body: { planId?: PlanId; interval?: BillingInterval };
   try {
     body = await req.json();
   } catch {
@@ -31,15 +36,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unknown plan" }, { status: 400 });
   }
 
+  const interval: BillingInterval = body.interval === "year" ? "year" : "month";
+
   const plan = PRICING_PLANS[planId];
-  if (plan.priceUsd === 0) {
+  if (plan.monthlyUsd === 0) {
     return NextResponse.json(
       { error: "Free plan does not require checkout." },
       { status: 400 }
     );
   }
 
+  const amount = priceFor(plan, interval);
   const origin = req.headers.get("origin") || new URL(req.url).origin;
+  const intervalLabel = interval === "year" ? "yearly" : "monthly";
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -48,11 +57,11 @@ export async function POST(req: Request) {
         {
           price_data: {
             currency: "usd",
-            unit_amount: plan.priceUsd * 100,
-            recurring: { interval: "month" },
+            unit_amount: amount * 100,
+            recurring: { interval },
             product_data: {
               name: `Ten Sparrows — ${plan.name}`,
-              description: `${plan.name} plan, billed monthly.`,
+              description: `${plan.name} plan, billed ${intervalLabel}.`,
             },
           },
           quantity: 1,
@@ -61,7 +70,7 @@ export async function POST(req: Request) {
       success_url: `${origin}/pricing/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing/cancel`,
       allow_promotion_codes: true,
-      metadata: { planId },
+      metadata: { planId, interval },
     });
 
     if (!session.url) {
