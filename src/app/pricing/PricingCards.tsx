@@ -15,8 +15,6 @@ type PricingPlan = {
   ctaLabel: string;
 };
 
-const DEFAULT_HIGHLIGHT_ID: PlanId = "worker";
-
 const plans: PricingPlan[] = [
   {
     id: "free",
@@ -95,7 +93,7 @@ export function PricingCards() {
   const [interval, setInterval] = useState<BillingInterval>("month");
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const activeId: PlanId = hoveredId ?? DEFAULT_HIGHLIGHT_ID;
+  const activeId: PlanId | null = hoveredId;
 
   function handleEnter(id: PlanId) {
     if (leaveTimerRef.current) {
