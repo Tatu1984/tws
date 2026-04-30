@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { useInView } from "@/hooks/useInView";
@@ -93,8 +93,25 @@ export function PricingCards() {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<PlanId | null>(null);
   const [interval, setInterval] = useState<BillingInterval>("month");
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeId: PlanId = hoveredId ?? DEFAULT_HIGHLIGHT_ID;
+
+  function handleEnter(id: PlanId) {
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+    setHoveredId(id);
+  }
+
+  function handleLeave() {
+    if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+    leaveTimerRef.current = setTimeout(() => {
+      setHoveredId(null);
+      leaveTimerRef.current = null;
+    }, 120);
+  }
 
   async function handleSelect(plan: PricingPlan) {
     if (plan.monthly === 0) {
@@ -184,10 +201,10 @@ export function PricingCards() {
             return (
               <div
                 key={plan.id}
-                onMouseEnter={() => setHoveredId(plan.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                onFocus={() => setHoveredId(plan.id)}
-                onBlur={() => setHoveredId(null)}
+                onMouseEnter={() => handleEnter(plan.id)}
+                onMouseLeave={handleLeave}
+                onFocus={() => handleEnter(plan.id)}
+                onBlur={handleLeave}
                 tabIndex={0}
                 className={`flex flex-col h-full rounded-2xl p-8 border cursor-pointer outline-none transition-[background-color,color,box-shadow,border-color] duration-300 ${
                   isActive
@@ -258,9 +275,11 @@ export function PricingCards() {
                   type="button"
                   onClick={() => handleSelect(plan)}
                   disabled={isLoading}
-                  className={`w-full ${
-                    isActive ? "button-solid" : "button-gradient"
-                  } disabled:opacity-60 disabled:cursor-not-allowed`}
+                  className={`w-full rounded-full py-3 px-6 text-base font-medium border-2 transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed ${
+                    isActive
+                      ? "border-transparent text-white bg-[linear-gradient(135deg,#e57368_20%,#f3b44a)]"
+                      : "border-[#001a2b] text-[#001a2b] bg-transparent"
+                  }`}
                 >
                   {isLoading ? "Redirecting…" : plan.ctaLabel}
                 </button>
