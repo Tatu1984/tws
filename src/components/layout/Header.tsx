@@ -14,6 +14,7 @@ const navItems = [
   { href: "/about", label: "About" },
   { href: "/what-we-do", label: "What We Do" },
   { href: "/why-ten-sparrows", label: "Why Ten Sparrows" },
+  { href: "/pricing", label: "Pricing" },
 ];
 
 export function Header() {
