@@ -47,9 +47,9 @@ export default async function PricingSuccessPage({
           <h1 className="text-white mb-6">Thank you — your subscription is active.</h1>
 
           <p className="text-lg text-white/75 mb-10 leading-relaxed">
-            We&apos;ve received your payment in Stripe&apos;s test environment. A receipt
-            has been sent to the email you used at checkout, and you can start
-            using your plan right away.
+            We&apos;ve received your payment. A receipt has been sent to the
+            email you used at checkout, and you can start using your plan right
+            away.
           </p>
 
           {session_id && (

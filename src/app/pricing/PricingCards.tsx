@@ -4,98 +4,241 @@ import { useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { useInView } from "@/hooks/useInView";
-import { ANNUAL_MONTHS_BILLED, type BillingInterval, type PlanId } from "@/lib/pricing";
+import {
+  PABLO_PLANS,
+  TS_EDGE_NEST_PLANS,
+  priceFor,
+  annualSavings,
+  type BillingInterval,
+  type PricingPlan,
+  type ProductId,
+} from "@/lib/pricing";
 
-type PricingPlan = {
-  id: PlanId;
+type PlanFeature = { title: string; description?: string };
+
+type CardPlan = {
+  id: string;
   name: string;
-  monthly: number;
   tagline: string;
-  features: string[];
   ctaLabel: string;
+  features: PlanFeature[];
+  featuresLeadIn?: string; // e.g. "ALLOWS YOU TO:" or "EVERYTHING IN FREE, AND:"
 };
 
-const plans: PricingPlan[] = [
-  {
-    id: "free",
-    name: "Free",
-    monthly: 0,
-    tagline: "Get a feel for how Ten Sparrows fits your workflow.",
-    features: [
-      "1 active project",
-      "Community support",
-      "Basic monitoring dashboards",
-      "Up to 2 team members",
-    ],
-    ctaLabel: "Get started",
-  },
-  {
-    id: "starter",
-    name: "Starter",
-    monthly: 22,
-    tagline: "For small teams shipping their first real workloads.",
-    features: [
-      "Up to 10 active projects",
-      "Email support, 24h response",
-      "Standard monitoring + alerts",
-      "Up to 10 team members",
-      "Daily backups",
-    ],
-    ctaLabel: "Choose Starter",
-  },
-  {
-    id: "worker",
-    name: "Worker",
-    monthly: 88,
-    tagline: "Built for production teams who run real systems.",
-    features: [
-      "Unlimited projects",
-      "Priority support, 4h response",
-      "Advanced metrics & log retention",
-      "Unlimited team members",
-      "Hourly backups",
-      "Single sign-on (SSO)",
-    ],
-    ctaLabel: "Choose Worker",
-  },
-  {
-    id: "assistant",
-    name: "Assistant",
-    monthly: 110,
-    tagline: "AI-assisted operations layered on top of Worker.",
-    features: [
-      "Everything in Worker",
-      "AI agents for monitoring & triage",
-      "Automated incident summaries",
-      "Custom workflows & integrations",
-      "Dedicated success engineer",
-    ],
-    ctaLabel: "Choose Assistant",
-  },
-];
+type Product = {
+  id: ProductId;
+  label: string;
+  intro: string;
+  plans: CardPlan[];
+};
 
-function formatPrice(plan: PricingPlan, interval: BillingInterval) {
-  const amount = interval === "year" ? plan.monthly * ANNUAL_MONTHS_BILLED : plan.monthly;
-  const fullMonthlyAnnual = plan.monthly * 12;
-  const savings = fullMonthlyAnnual - amount;
-  return {
-    amount,
-    suffix: interval === "year" ? "/yr" : "/mo",
-    fullMonthlyAnnual,
-    savings,
-  };
+const PABLO_PRODUCT: Product = {
+  id: "pablo",
+  label: "Pablo",
+  intro: "Operations and AI assistance for teams that ship real systems.",
+  plans: [
+    {
+      id: "free",
+      name: "Free",
+      tagline: "Get a feel for how Ten Sparrows fits your workflow.",
+      ctaLabel: "Get started",
+      features: [
+        { title: "1 active project" },
+        { title: "Community support" },
+        { title: "Basic monitoring dashboards" },
+        { title: "Up to 2 team members" },
+      ],
+    },
+    {
+      id: "starter",
+      name: "Starter",
+      tagline: "For small teams shipping their first real workloads.",
+      ctaLabel: "Choose Starter",
+      features: [
+        { title: "Up to 10 active projects" },
+        { title: "Email support, 24h response" },
+        { title: "Standard monitoring + alerts" },
+        { title: "Up to 10 team members" },
+        { title: "Daily backups" },
+      ],
+    },
+    {
+      id: "worker",
+      name: "Worker",
+      tagline: "Built for production teams who run real systems.",
+      ctaLabel: "Choose Worker",
+      features: [
+        { title: "Unlimited projects" },
+        { title: "Priority support, 4h response" },
+        { title: "Advanced metrics & log retention" },
+        { title: "Unlimited team members" },
+        { title: "Hourly backups" },
+        { title: "Single sign-on (SSO)" },
+      ],
+    },
+    {
+      id: "assistant",
+      name: "Assistant",
+      tagline: "AI-assisted operations layered on top of Worker.",
+      ctaLabel: "Choose Assistant",
+      features: [
+        { title: "Everything in Worker" },
+        { title: "AI agents for monitoring & triage" },
+        { title: "Automated incident summaries" },
+        { title: "Custom workflows & integrations" },
+        { title: "Dedicated success engineer" },
+      ],
+    },
+  ],
+};
+
+const TS_EDGE_NEST_PRODUCT: Product = {
+  id: "ts-edge-nest",
+  label: "TS Edge Nest",
+  intro: "AI-native workspace for everyday work, collaboration, and enterprise scale.",
+  plans: [
+    {
+      id: "edge-free",
+      name: "Free",
+      tagline: "Free for everyone.",
+      ctaLabel: "Try Edge Nest for free",
+      featuresLeadIn: "Allows you to:",
+      features: [
+        {
+          title: "Chat about any topic or task",
+          description: "your AI assistant for everyday work",
+        },
+        {
+          title: "Research anything in depth",
+          description: "analysis and reports",
+        },
+        {
+          title: "Automate the repetitive stuff",
+          description: "Flows that handle your daily busywork",
+        },
+        {
+          title: "Turn ideas into real apps",
+          description: "production-ready web apps in minutes",
+        },
+        {
+          title: "Turn conversations into deliverables",
+          description: "create docs, sheets, decks, and apps",
+        },
+        {
+          title: "Connect the tools you already use",
+          description: "Slack, Microsoft 365, Google Workspace, QuickBooks, and more",
+        },
+      ],
+    },
+    {
+      id: "edge-plus",
+      name: "Plus",
+      tagline: "For teams up to 300 who need collaboration and user management.",
+      ctaLabel: "Choose Plus",
+      featuresLeadIn: "Everything in Free, and:",
+      features: [
+        {
+          title: "Edge on your desktop",
+          description: "proactive AI across email, messaging and local files",
+        },
+        {
+          title: "Shared Spaces for your team",
+          description: "knowledge, agents, and automations that compound across people",
+        },
+        {
+          title: "Edge works where you work",
+          description: "browsers and Microsoft 365 extensions",
+        },
+        {
+          title: "Scale when you're ready",
+          description: "user management, centralized billing, up to 300 users, 10 GB storage per seat",
+        },
+      ],
+    },
+    {
+      id: "edge-professional",
+      name: "Professional",
+      tagline: "For organizations requiring advanced governance & controls at any scale.",
+      ctaLabel: "Choose Professional",
+      featuresLeadIn: "Everything in Plus, and:",
+      features: [
+        {
+          title: "Grow without limits",
+          description: "unlimited user scaling so your whole org can get on board",
+        },
+        {
+          title: "Enterprise governance and compliance",
+          description: "RBAC, SSO, data sovereignty, and admin controls",
+        },
+        {
+          title: "See the big picture instantly",
+          description: "dashboards and data visualizations that surface what matters",
+        },
+        {
+          title: "Automate complex processes",
+          description: "human-in-the-loop orchestration across UIs, APIs, and teams",
+        },
+        {
+          title: "Support when you need it",
+          description: "24/7 priority support",
+        },
+        { title: "25 GB pooled storage per user" },
+      ],
+    },
+    {
+      id: "edge-enterprise",
+      name: "Enterprise",
+      tagline: "For teams who author the insights and automations their enterprise runs on.",
+      ctaLabel: "Choose Enterprise",
+      featuresLeadIn: "Everything in Professional, and:",
+      features: [
+        {
+          title: "Author dashboards your way",
+          description: "custom dashboard creation tailored to your business",
+        },
+        {
+          title: "Certify and publish assets",
+          description: "so your team always works from one source of truth",
+        },
+        { title: "50 GB pooled storage per user" },
+      ],
+    },
+  ],
+};
+
+const PRODUCTS: Product[] = [PABLO_PRODUCT, TS_EDGE_NEST_PRODUCT];
+
+const PLAN_LOOKUP: Record<ProductId, Record<string, PricingPlan>> = {
+  pablo: PABLO_PLANS,
+  "ts-edge-nest": TS_EDGE_NEST_PLANS,
+};
+
+function formatPlanPrice(plan: PricingPlan, interval: BillingInterval) {
+  const yearlyTotal = priceFor(plan, "year");
+  const monthlyDisplay =
+    interval === "year"
+      ? plan.yearlyMonthlyUsd !== undefined
+        ? plan.yearlyMonthlyUsd
+        : Math.round((yearlyTotal / 12) * 100) / 100
+      : plan.monthlyUsd;
+  const billed = interval === "year" ? yearlyTotal : plan.monthlyUsd;
+  const fullMonthly12 = plan.monthlyUsd * 12;
+  const savings = interval === "year" ? annualSavings(plan) : 0;
+  return { monthlyDisplay, billed, fullMonthly12, savings };
 }
 
 export function PricingCards() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.05 });
   const [loadingId, setLoadingId] = useState<string | null>(null);
-  const [hoveredId, setHoveredId] = useState<PlanId | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [interval, setInterval] = useState<BillingInterval>("month");
+  const [productId, setProductId] = useState<ProductId>("pablo");
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const activeId: PlanId | null = hoveredId;
+  const activeProduct = PRODUCTS.find((p) => p.id === productId) ?? PRODUCTS[0];
+  const planLookup = PLAN_LOOKUP[activeProduct.id];
 
-  function handleEnter(id: PlanId) {
+  function handleEnter(id: string) {
     if (leaveTimerRef.current) {
       clearTimeout(leaveTimerRef.current);
       leaveTimerRef.current = null;
@@ -111,14 +254,20 @@ export function PricingCards() {
     }, 120);
   }
 
-  async function handleSelect(plan: PricingPlan) {
-    if (plan.monthly === 0) {
-      toast.success("You're on the Free plan — no checkout needed.");
+  async function handleSelect(card: CardPlan) {
+    const plan = planLookup[card.id];
+    if (!plan) {
+      toast.error("Plan not available. Please try again.");
+      return;
+    }
+
+    if (plan.monthlyUsd === 0) {
+      toast.success(`You're on the ${plan.name} plan — no checkout needed.`);
       return;
     }
 
     try {
-      setLoadingId(plan.id);
+      setLoadingId(card.id);
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -143,6 +292,39 @@ export function PricingCards() {
   return (
     <section className="off-white-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Product toggle */}
+        <div className="flex justify-center mb-6">
+          <div
+            role="tablist"
+            aria-label="Product"
+            className="inline-flex items-center p-1 bg-white rounded-full border border-black/10 shadow-[0_2px_11px_rgba(161,161,161,0.15)]"
+          >
+            {PRODUCTS.map((product) => {
+              const isActive = product.id === activeProduct.id;
+              return (
+                <button
+                  key={product.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setProductId(product.id)}
+                  className={`px-6 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
+                    isActive
+                      ? "bg-[#001a2b] text-white shadow-sm"
+                      : "text-[#001a2b]/70 hover:text-[#001a2b]"
+                  }`}
+                >
+                  {product.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <p className="text-center text-sm text-[#001a2b]/65 max-w-2xl mx-auto mb-10">
+          {activeProduct.intro}
+        </p>
+
         {/* Billing-interval toggle */}
         <div className="flex justify-center mb-12">
           <div
@@ -180,7 +362,7 @@ export function PricingCards() {
                     : "bg-[#f3b44a]/20 text-[#001a2b]"
                 }`}
               >
-                Save 2 mo
+                Save
               </span>
             </button>
           </div>
@@ -188,20 +370,24 @@ export function PricingCards() {
 
         <div
           ref={ref}
+          key={activeProduct.id}
           className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 stagger-children${inView ? " in-view" : ""}`}
         >
-          {plans.map((plan) => {
-            const isLoading = loadingId === plan.id;
-            const isActive = activeId === plan.id;
-            const { amount, suffix, fullMonthlyAnnual, savings } = formatPrice(plan, interval);
+          {activeProduct.plans.map((card) => {
+            const plan = planLookup[card.id];
+            if (!plan) return null;
+            const isLoading = loadingId === card.id;
+            const isActive = hoveredId === card.id;
+            const { monthlyDisplay, fullMonthly12, savings } = formatPlanPrice(plan, interval);
             const showSavings = interval === "year" && savings > 0;
+            const priceUnit = plan.perUser ? "/user/mo" : "/mo";
 
             return (
               <div
-                key={plan.id}
-                onMouseEnter={() => handleEnter(plan.id)}
+                key={card.id}
+                onMouseEnter={() => handleEnter(card.id)}
                 onMouseLeave={handleLeave}
-                onFocus={() => handleEnter(plan.id)}
+                onFocus={() => handleEnter(card.id)}
                 onBlur={handleLeave}
                 tabIndex={0}
                 className={`flex flex-col h-full rounded-2xl p-8 border cursor-pointer outline-none transition-[background-color,color,box-shadow,border-color] duration-300 ${
@@ -216,7 +402,7 @@ export function PricingCards() {
                   }`}
                   style={{ fontFamily: 'p22-underground, var(--font-archivo), sans-serif', letterSpacing: '-0.5px' }}
                 >
-                  {plan.name}
+                  {card.name}
                 </h3>
 
                 <div className="mb-1 flex items-baseline gap-1">
@@ -224,18 +410,25 @@ export function PricingCards() {
                     className={`text-5xl font-bold ${isActive ? "text-white" : "text-[#001a2b]"}`}
                     style={{ fontFamily: 'p22-underground, var(--font-archivo), sans-serif', letterSpacing: '-1px' }}
                   >
-                    ${amount.toLocaleString()}
+                    ${monthlyDisplay.toLocaleString()}
                   </span>
                   <span className={`text-sm ${isActive ? "text-white/60" : "text-black/50"}`}>
-                    {suffix}
+                    {priceUnit}
                   </span>
                 </div>
 
-                {/* Reserve a constant slot so monthly/yearly toggle doesn't shift card height */}
+                {/* Reserve constant slot for savings/fee note so cards keep the same height. */}
                 <div className="min-h-[1.25rem] mb-3 text-xs">
-                  {showSavings ? (
+                  {plan.infraFeeNote ? (
+                    <span className={`italic ${isActive ? "text-white/70" : "text-black/60"}`}>
+                      {plan.infraFeeNote}
+                    </span>
+                  ) : showSavings ? (
                     <span className={isActive ? "text-white/60" : "text-black/55"}>
-                      <span className="line-through mr-1.5">${fullMonthlyAnnual.toLocaleString()}</span>
+                      <span className="line-through mr-1.5">
+                        ${fullMonthly12.toLocaleString()}
+                        {plan.perUser ? "/user/yr" : "/yr"}
+                      </span>
                       <span className={isActive ? "text-[#f3b44a] font-semibold" : "text-[#e57368] font-semibold"}>
                         save ${savings.toLocaleString()}
                       </span>
@@ -250,12 +443,22 @@ export function PricingCards() {
                     isActive ? "text-white/75" : "text-black/65"
                   }`}
                 >
-                  {plan.tagline}
+                  {card.tagline}
                 </p>
 
+                {card.featuresLeadIn && (
+                  <p
+                    className={`text-[11px] font-bold uppercase tracking-wider mb-3 ${
+                      isActive ? "text-white/60" : "text-[#001a2b]/55"
+                    }`}
+                  >
+                    {card.featuresLeadIn}
+                  </p>
+                )}
+
                 <ul className="space-y-3 mb-8 grow">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm">
+                  {card.features.map((feature) => (
+                    <li key={feature.title} className="flex items-start gap-3 text-sm">
                       <Check
                         className={`h-4 w-4 mt-0.5 shrink-0 ${
                           isActive ? "text-[#f3b44a]" : "text-[#e57368]"
@@ -263,7 +466,13 @@ export function PricingCards() {
                         strokeWidth={3}
                       />
                       <span className={isActive ? "text-white/85" : "text-[#001a2b]/85"}>
-                        {feature}
+                        <span className="font-semibold">{feature.title}</span>
+                        {feature.description && (
+                          <span className={isActive ? "text-white/70" : "text-[#001a2b]/70"}>
+                            {" — "}
+                            {feature.description}
+                          </span>
+                        )}
                       </span>
                     </li>
                   ))}
@@ -271,7 +480,7 @@ export function PricingCards() {
 
                 <button
                   type="button"
-                  onClick={() => handleSelect(plan)}
+                  onClick={() => handleSelect(card)}
                   disabled={isLoading}
                   className={`w-full rounded-full py-3 px-6 text-base font-medium border-2 transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed ${
                     isActive
@@ -279,17 +488,12 @@ export function PricingCards() {
                       : "border-[#001a2b] text-[#001a2b] bg-transparent"
                   }`}
                 >
-                  {isLoading ? "Redirecting…" : plan.ctaLabel}
+                  {isLoading ? "Redirecting…" : card.ctaLabel}
                 </button>
               </div>
             );
           })}
         </div>
-
-        <p className="text-center text-xs text-black/50 mt-10">
-          Payments are processed in Stripe test mode. Use card{" "}
-          <span className="font-mono">4242 4242 4242 4242</span>, any future expiry, any CVC.
-        </p>
       </div>
     </section>
   );

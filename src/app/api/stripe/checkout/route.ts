@@ -4,7 +4,6 @@ import {
   PRICING_PLANS,
   priceFor,
   type BillingInterval,
-  type PlanId,
 } from "@/lib/pricing";
 
 export const runtime = "nodejs";
@@ -15,6 +14,11 @@ function getStripe() {
   return new Stripe(key);
 }
 
+const PRODUCT_LABEL: Record<string, string> = {
+  pablo: "Pablo",
+  "ts-edge-nest": "TS Edge Nest",
+};
+
 export async function POST(req: Request) {
   const stripe = getStripe();
   if (!stripe) {
@@ -24,7 +28,7 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: { planId?: PlanId; interval?: BillingInterval };
+  let body: { planId?: string; interval?: BillingInterval };
   try {
     body = await req.json();
   } catch {
@@ -49,6 +53,8 @@ export async function POST(req: Request) {
   const amount = priceFor(plan, interval);
   const origin = req.headers.get("origin") || new URL(req.url).origin;
   const intervalLabel = interval === "year" ? "yearly" : "monthly";
+  const productLabel = PRODUCT_LABEL[plan.productId] ?? "Ten Sparrows";
+  const perUnitSuffix = plan.perUser ? " per user" : "";
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -60,8 +66,8 @@ export async function POST(req: Request) {
             unit_amount: amount * 100,
             recurring: { interval },
             product_data: {
-              name: `Ten Sparrows — ${plan.name}`,
-              description: `${plan.name} plan, billed ${intervalLabel}.`,
+              name: `${productLabel} — ${plan.name}`,
+              description: `${plan.name} plan, billed ${intervalLabel}${perUnitSuffix}.`,
             },
           },
           quantity: 1,
@@ -70,7 +76,7 @@ export async function POST(req: Request) {
       success_url: `${origin}/pricing/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing/cancel`,
       allow_promotion_codes: true,
-      metadata: { planId, interval },
+      metadata: { planId, productId: plan.productId, interval },
     });
 
     if (!session.url) {
