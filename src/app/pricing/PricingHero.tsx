@@ -2,7 +2,17 @@
 
 import { useInView } from "@/hooks/useInView";
 
-export function PricingHero() {
+type PricingHeroProps = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+};
+
+export function PricingHero({
+  eyebrow = "Pricing",
+  title = "Simple plans for every stage.",
+  description = "Choose the plan that fits how you work. Start free, scale when you need more, and only pay for the capacity you actually use.",
+}: PricingHeroProps) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
 
   return (
@@ -15,21 +25,20 @@ export function PricingHero() {
         <div ref={ref} className="max-w-3xl mx-auto text-center">
           <div className={`mb-6 fade-up${inView ? " in-view" : ""}`}>
             <div className="gradient-eyebrow midnight-blue">
-              <span className="text-style-tagline midnight-blue">Pricing</span>
+              <span className="text-style-tagline midnight-blue">{eyebrow}</span>
             </div>
           </div>
           <h1
             className={`text-white mb-6 fade-up${inView ? " in-view" : ""}`}
             style={{ transitionDelay: "100ms" }}
           >
-            Simple plans for every stage.
+            {title}
           </h1>
           <p
             className={`text-lg sm:text-xl text-white/70 leading-relaxed fade-up${inView ? " in-view" : ""}`}
             style={{ transitionDelay: "180ms" }}
           >
-            Choose the plan that fits how you work. Start free, scale when you
-            need more, and only pay for the capacity you actually use.
+            {description}
           </p>
         </div>
       </div>

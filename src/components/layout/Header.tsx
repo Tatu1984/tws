@@ -14,7 +14,8 @@ const navItems = [
   { href: "/about", label: "About" },
   { href: "/what-we-do", label: "What We Do" },
   { href: "/why-ten-sparrows", label: "Why Ten Sparrows" },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/pablo", label: "Pablo" },
+  { href: "/ts-edge-nest", label: "TS Edge Nest" },
 ];
 
 export function Header() {

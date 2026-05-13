@@ -206,7 +206,10 @@ const TS_EDGE_NEST_PRODUCT: Product = {
   ],
 };
 
-const PRODUCTS: Product[] = [PABLO_PRODUCT, TS_EDGE_NEST_PRODUCT];
+const PRODUCT_LOOKUP: Record<ProductId, Product> = {
+  pablo: PABLO_PRODUCT,
+  "ts-edge-nest": TS_EDGE_NEST_PRODUCT,
+};
 
 const PLAN_LOOKUP: Record<ProductId, Record<string, PricingPlan>> = {
   pablo: PABLO_PLANS,
@@ -227,16 +230,19 @@ function formatPlanPrice(plan: PricingPlan, interval: BillingInterval) {
   return { monthlyDisplay, billed, fullMonthly12, savings };
 }
 
-export function PricingCards() {
+type PricingCardsProps = {
+  productId: ProductId;
+};
+
+export function PricingCards({ productId }: PricingCardsProps) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.05 });
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [interval, setInterval] = useState<BillingInterval>("month");
-  const [productId, setProductId] = useState<ProductId>("pablo");
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const activeProduct = PRODUCTS.find((p) => p.id === productId) ?? PRODUCTS[0];
-  const planLookup = PLAN_LOOKUP[activeProduct.id];
+  const activeProduct = PRODUCT_LOOKUP[productId];
+  const planLookup = PLAN_LOOKUP[productId];
 
   function handleEnter(id: string) {
     if (leaveTimerRef.current) {
@@ -292,35 +298,6 @@ export function PricingCards() {
   return (
     <section className="off-white-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Product toggle */}
-        <div className="flex justify-center mb-6">
-          <div
-            role="tablist"
-            aria-label="Product"
-            className="inline-flex items-center p-1 bg-white rounded-full border border-black/10 shadow-[0_2px_11px_rgba(161,161,161,0.15)]"
-          >
-            {PRODUCTS.map((product) => {
-              const isActive = product.id === activeProduct.id;
-              return (
-                <button
-                  key={product.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setProductId(product.id)}
-                  className={`px-6 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
-                    isActive
-                      ? "bg-[#001a2b] text-white shadow-sm"
-                      : "text-[#001a2b]/70 hover:text-[#001a2b]"
-                  }`}
-                >
-                  {product.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         <p className="text-center text-sm text-[#001a2b]/65 max-w-2xl mx-auto mb-10">
           {activeProduct.intro}
         </p>
