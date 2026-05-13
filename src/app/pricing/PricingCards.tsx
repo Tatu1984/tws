@@ -1,15 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { Check } from "lucide-react";
-import { toast } from "sonner";
 import { useInView } from "@/hooks/useInView";
 import {
   PABLO_PLANS,
   TS_EDGE_NEST_PLANS,
-  priceFor,
-  annualSavings,
-  type BillingInterval,
   type PricingPlan,
   type ProductId,
 } from "@/lib/pricing";
@@ -22,7 +19,7 @@ type CardPlan = {
   tagline: string;
   ctaLabel: string;
   features: PlanFeature[];
-  featuresLeadIn?: string; // e.g. "ALLOWS YOU TO:" or "EVERYTHING IN FREE, AND:"
+  featuresLeadIn?: string;
 };
 
 type Product = {
@@ -216,19 +213,10 @@ const PLAN_LOOKUP: Record<ProductId, Record<string, PricingPlan>> = {
   "ts-edge-nest": TS_EDGE_NEST_PLANS,
 };
 
-function formatPlanPrice(plan: PricingPlan, interval: BillingInterval) {
-  const yearlyTotal = priceFor(plan, "year");
-  const monthlyDisplay =
-    interval === "year"
-      ? plan.yearlyMonthlyUsd !== undefined
-        ? plan.yearlyMonthlyUsd
-        : Math.round((yearlyTotal / 12) * 100) / 100
-      : plan.monthlyUsd;
-  const billed = interval === "year" ? yearlyTotal : plan.monthlyUsd;
-  const fullMonthly12 = plan.monthlyUsd * 12;
-  const savings = interval === "year" ? annualSavings(plan) : 0;
-  return { monthlyDisplay, billed, fullMonthly12, savings };
-}
+const CHECKOUT_PATH: Record<ProductId, string> = {
+  pablo: "/pablo/checkout",
+  "ts-edge-nest": "/ts-edge-nest/checkout",
+};
 
 type PricingCardsProps = {
   productId: ProductId;
@@ -236,13 +224,12 @@ type PricingCardsProps = {
 
 export function PricingCards({ productId }: PricingCardsProps) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.05 });
-  const [loadingId, setLoadingId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [interval, setInterval] = useState<BillingInterval>("month");
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeProduct = PRODUCT_LOOKUP[productId];
   const planLookup = PLAN_LOOKUP[productId];
+  const checkoutHref = CHECKOUT_PATH[productId];
 
   function handleEnter(id: string) {
     if (leaveTimerRef.current) {
@@ -260,41 +247,6 @@ export function PricingCards({ productId }: PricingCardsProps) {
     }, 120);
   }
 
-  async function handleSelect(card: CardPlan) {
-    const plan = planLookup[card.id];
-    if (!plan) {
-      toast.error("Plan not available. Please try again.");
-      return;
-    }
-
-    if (plan.monthlyUsd === 0) {
-      toast.success(`You're on the ${plan.name} plan — no checkout needed.`);
-      return;
-    }
-
-    try {
-      setLoadingId(card.id);
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId: plan.id, interval }),
-      });
-
-      const data: { url?: string; error?: string } = await res.json();
-
-      if (!res.ok || !data.url) {
-        toast.error(data.error || "Could not start checkout. Please try again.");
-        return;
-      }
-
-      window.location.href = data.url;
-    } catch {
-      toast.error("Network error. Please try again.");
-    } finally {
-      setLoadingId(null);
-    }
-  }
-
   return (
     <section className="off-white-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -302,48 +254,9 @@ export function PricingCards({ productId }: PricingCardsProps) {
           {activeProduct.intro}
         </p>
 
-        {/* Billing-interval toggle */}
-        <div className="flex justify-center mb-12">
-          <div
-            role="group"
-            aria-label="Billing interval"
-            className="inline-flex items-center p-1 bg-white rounded-full border border-black/10 shadow-[0_2px_11px_rgba(161,161,161,0.15)]"
-          >
-            <button
-              type="button"
-              onClick={() => setInterval("month")}
-              aria-pressed={interval === "month"}
-              className={`px-6 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
-                interval === "month"
-                  ? "bg-[#001a2b] text-white shadow-sm"
-                  : "text-[#001a2b]/70 hover:text-[#001a2b]"
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              type="button"
-              onClick={() => setInterval("year")}
-              aria-pressed={interval === "year"}
-              className={`flex items-center gap-2 px-6 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
-                interval === "year"
-                  ? "bg-[#001a2b] text-white shadow-sm"
-                  : "text-[#001a2b]/70 hover:text-[#001a2b]"
-              }`}
-            >
-              Yearly
-              <span
-                className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                  interval === "year"
-                    ? "bg-[#f3b44a] text-[#001a2b]"
-                    : "bg-[#f3b44a]/20 text-[#001a2b]"
-                }`}
-              >
-                Save
-              </span>
-            </button>
-          </div>
-        </div>
+        <p className="text-center text-xs text-[#001a2b]/55 max-w-2xl mx-auto mb-12">
+          Prices shown monthly. Choose monthly, yearly, or 2-year billing at checkout.
+        </p>
 
         <div
           ref={ref}
@@ -353,10 +266,7 @@ export function PricingCards({ productId }: PricingCardsProps) {
           {activeProduct.plans.map((card) => {
             const plan = planLookup[card.id];
             if (!plan) return null;
-            const isLoading = loadingId === card.id;
             const isActive = hoveredId === card.id;
-            const { monthlyDisplay, fullMonthly12, savings } = formatPlanPrice(plan, interval);
-            const showSavings = interval === "year" && savings > 0;
             const priceUnit = plan.perUser ? "/user/mo" : "/mo";
 
             return (
@@ -387,28 +297,17 @@ export function PricingCards({ productId }: PricingCardsProps) {
                     className={`text-5xl font-bold ${isActive ? "text-white" : "text-[#001a2b]"}`}
                     style={{ fontFamily: 'p22-underground, var(--font-archivo), sans-serif', letterSpacing: '-1px' }}
                   >
-                    ${monthlyDisplay.toLocaleString()}
+                    ${plan.monthlyUsd.toLocaleString()}
                   </span>
                   <span className={`text-sm ${isActive ? "text-white/60" : "text-black/50"}`}>
                     {priceUnit}
                   </span>
                 </div>
 
-                {/* Reserve constant slot for savings/fee note so cards keep the same height. */}
                 <div className="min-h-[1.25rem] mb-3 text-xs">
                   {plan.infraFeeNote ? (
                     <span className={`italic ${isActive ? "text-white/70" : "text-black/60"}`}>
                       {plan.infraFeeNote}
-                    </span>
-                  ) : showSavings ? (
-                    <span className={isActive ? "text-white/60" : "text-black/55"}>
-                      <span className="line-through mr-1.5">
-                        ${fullMonthly12.toLocaleString()}
-                        {plan.perUser ? "/user/yr" : "/yr"}
-                      </span>
-                      <span className={isActive ? "text-[#f3b44a] font-semibold" : "text-[#e57368] font-semibold"}>
-                        save ${savings.toLocaleString()}
-                      </span>
                     </span>
                   ) : (
                     <span aria-hidden="true">&nbsp;</span>
@@ -455,18 +354,16 @@ export function PricingCards({ productId }: PricingCardsProps) {
                   ))}
                 </ul>
 
-                <button
-                  type="button"
-                  onClick={() => handleSelect(card)}
-                  disabled={isLoading}
-                  className={`w-full rounded-full py-3 px-6 text-base font-medium border-2 transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed ${
+                <Link
+                  href={checkoutHref}
+                  className={`block w-full text-center rounded-full py-3 px-6 text-base font-medium border-2 transition-colors duration-300 ${
                     isActive
                       ? "border-transparent text-white bg-[linear-gradient(135deg,#e57368_20%,#f3b44a)]"
                       : "border-[#001a2b] text-[#001a2b] bg-transparent"
                   }`}
                 >
-                  {isLoading ? "Redirecting…" : card.ctaLabel}
-                </button>
+                  {card.ctaLabel}
+                </Link>
               </div>
             );
           })}

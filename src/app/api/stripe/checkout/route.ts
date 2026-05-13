@@ -11,6 +11,8 @@ export const runtime = "nodejs";
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
+  // Hard guard: refuse sandbox/test keys. We're live-only.
+  if (!key.startsWith("sk_live_")) return null;
   return new Stripe(key);
 }
 
@@ -22,8 +24,12 @@ const PRODUCT_LABEL: Record<string, string> = {
 export async function POST(req: Request) {
   const stripe = getStripe();
   if (!stripe) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    const reason = !key
+      ? "STRIPE_SECRET_KEY is not set."
+      : "STRIPE_SECRET_KEY is a test/sandbox key. Only sk_live_ keys are accepted.";
     return NextResponse.json(
-      { error: "Stripe is not configured. Set STRIPE_SECRET_KEY in .env.local." },
+      { error: `Stripe is not configured correctly: ${reason}` },
       { status: 500 }
     );
   }
