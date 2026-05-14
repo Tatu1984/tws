@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Pablo Checkout | Ten Sparrows",
   description:
-    "Choose monthly, yearly, or 2-year billing for your Pablo plan.",
+    "Choose your Pablo plan — start free or pick monthly or yearly billing for Sparrow.",
 };
 
 export default function PabloCheckoutPage() {
@@ -17,8 +17,8 @@ export default function PabloCheckoutPage() {
           <div className="text-center mb-10">
             <h1 className="text-[#001a2b] mb-4">Choose your Pablo plan</h1>
             <p className="text-base text-[#001a2b]/70 max-w-2xl mx-auto">
-              Pick a plan and a billing cycle. Monthly, yearly, and 2-year
-              options are shown below with their respective prices.
+              Start free or pick monthly or yearly billing for Sparrow. Annual
+              plans save ~73%.
             </p>
           </div>
           <StripePricingTable

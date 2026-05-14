@@ -18,12 +18,16 @@ export type PricingPlan = {
   perUser?: boolean;
 };
 
-// Pablo product plans (the existing Ten Sparrows operations product).
+// Pablo product plans.
 export const PABLO_PLANS: Record<string, PricingPlan> = {
   free: { id: "free", productId: "pablo", name: "Free", monthlyUsd: 0 },
-  starter: { id: "starter", productId: "pablo", name: "Starter", monthlyUsd: 22 },
-  worker: { id: "worker", productId: "pablo", name: "Worker", monthlyUsd: 88 },
-  assistant: { id: "assistant", productId: "pablo", name: "Assistant", monthlyUsd: 110 },
+  sparrow: {
+    id: "sparrow",
+    productId: "pablo",
+    name: "Sparrow",
+    monthlyUsd: 22,
+    yearlyMonthlyUsd: 6,
+  },
 };
 
 // TS Edge Nest product plans.
@@ -48,14 +52,6 @@ export const TS_EDGE_NEST_PLANS: Record<string, PricingPlan> = {
     productId: "ts-edge-nest",
     name: "Professional",
     monthlyUsd: 20,
-    infraFeeNote: "+$250 infrastructure fee per organization",
-    perUser: true,
-  },
-  "edge-enterprise": {
-    id: "edge-enterprise",
-    productId: "ts-edge-nest",
-    name: "Enterprise",
-    monthlyUsd: 40,
     infraFeeNote: "+$250 infrastructure fee per organization",
     perUser: true,
   },

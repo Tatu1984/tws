@@ -47,43 +47,18 @@ const PABLO_PRODUCT: Product = {
       ],
     },
     {
-      id: "starter",
-      name: "Starter",
-      tagline: "For small teams shipping their first real workloads.",
-      ctaLabel: "Choose Starter",
-      features: [
-        { title: "Up to 10 active projects" },
-        { title: "Email support, 24h response" },
-        { title: "Standard monitoring + alerts" },
-        { title: "Up to 10 team members" },
-        { title: "Daily backups" },
-      ],
-    },
-    {
-      id: "worker",
-      name: "Worker",
-      tagline: "Built for production teams who run real systems.",
-      ctaLabel: "Choose Worker",
+      id: "sparrow",
+      name: "Sparrow",
+      tagline: "Everything you need to run real systems — with AI assistance.",
+      ctaLabel: "Choose Sparrow",
+      featuresLeadIn: "Everything in Free, and:",
       features: [
         { title: "Unlimited projects" },
-        { title: "Priority support, 4h response" },
-        { title: "Advanced metrics & log retention" },
+        { title: "Priority support" },
+        { title: "Advanced monitoring, metrics & log retention" },
         { title: "Unlimited team members" },
-        { title: "Hourly backups" },
+        { title: "AI-assisted operations & incident triage" },
         { title: "Single sign-on (SSO)" },
-      ],
-    },
-    {
-      id: "assistant",
-      name: "Assistant",
-      tagline: "AI-assisted operations layered on top of Worker.",
-      ctaLabel: "Choose Assistant",
-      features: [
-        { title: "Everything in Worker" },
-        { title: "AI agents for monitoring & triage" },
-        { title: "Automated incident summaries" },
-        { title: "Custom workflows & integrations" },
-        { title: "Dedicated success engineer" },
       ],
     },
   ],
@@ -182,24 +157,6 @@ const TS_EDGE_NEST_PRODUCT: Product = {
         { title: "25 GB pooled storage per user" },
       ],
     },
-    {
-      id: "edge-enterprise",
-      name: "Enterprise",
-      tagline: "For teams who author the insights and automations their enterprise runs on.",
-      ctaLabel: "Choose Enterprise",
-      featuresLeadIn: "Everything in Professional, and:",
-      features: [
-        {
-          title: "Author dashboards your way",
-          description: "custom dashboard creation tailored to your business",
-        },
-        {
-          title: "Certify and publish assets",
-          description: "so your team always works from one source of truth",
-        },
-        { title: "50 GB pooled storage per user" },
-      ],
-    },
   ],
 };
 
@@ -255,13 +212,17 @@ export function PricingCards({ productId }: PricingCardsProps) {
         </p>
 
         <p className="text-center text-xs text-[#001a2b]/55 max-w-2xl mx-auto mb-12">
-          Prices shown monthly. Choose monthly, yearly, or 2-year billing at checkout.
+          Prices shown monthly. Pick your billing cycle at checkout.
         </p>
 
         <div
           ref={ref}
           key={activeProduct.id}
-          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 stagger-children${inView ? " in-view" : ""}`}
+          className={`grid grid-cols-1 ${
+            activeProduct.plans.length <= 2
+              ? "sm:grid-cols-2 max-w-3xl"
+              : "sm:grid-cols-2 lg:grid-cols-3 max-w-5xl"
+          } gap-6 lg:gap-8 mx-auto stagger-children${inView ? " in-view" : ""}`}
         >
           {activeProduct.plans.map((card) => {
             const plan = planLookup[card.id];
@@ -308,6 +269,14 @@ export function PricingCards({ productId }: PricingCardsProps) {
                   {plan.infraFeeNote ? (
                     <span className={`italic ${isActive ? "text-white/70" : "text-black/60"}`}>
                       {plan.infraFeeNote}
+                    </span>
+                  ) : plan.yearlyMonthlyUsd !== undefined &&
+                    plan.yearlyMonthlyUsd < plan.monthlyUsd ? (
+                    <span className={isActive ? "text-white/75" : "text-black/65"}>
+                      Or <span className="font-semibold">${plan.yearlyMonthlyUsd}/mo</span> billed annually —{" "}
+                      <span className={isActive ? "text-[#f3b44a] font-semibold" : "text-[#e57368] font-semibold"}>
+                        save ~{Math.round(((plan.monthlyUsd - plan.yearlyMonthlyUsd) / plan.monthlyUsd) * 100)}%
+                      </span>
                     </span>
                   ) : (
                     <span aria-hidden="true">&nbsp;</span>
