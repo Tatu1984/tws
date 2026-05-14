@@ -1,7 +1,7 @@
 import { Header, Footer } from '@/components/layout';
 import { CTASection } from '@/components/sections';
 import { PricingHero } from '../pricing/PricingHero';
-import { StripePricingTable } from '@/components/stripe/StripePricingTable';
+import { PricingCards } from '../pricing/PricingCards';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -19,14 +19,7 @@ export default function PabloPage() {
           title="Pablo plans for every stage."
           description="Operations and AI assistance for teams that ship real systems. Start free, or pick monthly or yearly billing — annual plans save ~73%."
         />
-        <section className="off-white-background py-16 lg:py-24">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <StripePricingTable
-              pricingTableId={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID_PABLO}
-              publishableKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-            />
-          </div>
-        </section>
+        <PricingCards productId="pablo" />
         <CTASection
           title="Still deciding?"
           description="Talk to us about which Pablo plan fits your team. We'll help you choose without the upsell."
