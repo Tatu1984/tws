@@ -1,4 +1,6 @@
 import { Header, Footer } from "@/components/layout";
+import { CTASection } from "@/components/sections";
+import { PricingHero } from "../../pricing/PricingHero";
 import { StripePricingTable } from "@/components/stripe/StripePricingTable";
 import type { Metadata } from "next";
 
@@ -12,20 +14,25 @@ export default function PabloCheckoutPage() {
   return (
     <>
       <Header />
-      <main className="off-white-background pt-32 lg:pt-40 pb-16 lg:pb-24">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h1 className="text-[#001a2b] mb-4">Choose your billing cycle</h1>
-            <p className="text-base text-[#001a2b]/70 max-w-2xl mx-auto">
-              Pick monthly or yearly below — annual saves ~73%. You&apos;ll be taken
-              to Stripe to complete payment.
-            </p>
+      <main>
+        <PricingHero
+          eyebrow="Pablo"
+          title="Choose your billing cycle."
+          description="Pick monthly or yearly below — annual plans save ~73%. You'll be taken to Stripe to complete payment."
+        />
+        <section className="off-white-background py-16 lg:py-24">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <StripePricingTable
+              pricingTableId={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID_PABLO}
+              publishableKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+            />
           </div>
-          <StripePricingTable
-            pricingTableId={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID_PABLO}
-            publishableKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-          />
-        </div>
+        </section>
+        <CTASection
+          title="Need to talk to someone first?"
+          description="Not sure which plan is right? We'll help you pick — no upsell."
+          ctaText="Talk to Sales"
+        />
       </main>
       <Footer />
     </>
